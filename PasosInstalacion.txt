@@ -8,3 +8,5 @@
 7. Para probar que todo funciona correctamente entrar al proyecto SistemaTutoriales y ejecutar el comando 'py manage.py runserver' e ingresar al navegador con la siguiente url : http://127.0.0.1:8000/prueba/
 
 Nota: para desactivar el entorno virtual usar el comando 'deactivate' , cada vez que se vuelva a usar el proyecto ejecutar el paso 5
+
+ADVERTENCIA: cuando realicen un commit para el repositorio hacerlo desde dentro del directorio SistemaTutoriales, al nivel del archivo manage.py, no desde el nivel del archivo get-pip.py ya que se subirá el entorno virtual y será una perdida de tiempo, además que se puede estropear el proyecto
