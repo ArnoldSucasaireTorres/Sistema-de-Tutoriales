@@ -9,7 +9,7 @@ class Nivel(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return self.nombre
 
 class Area(models.Model):
     id = models.AutoField(primary_key=True)
@@ -19,7 +19,7 @@ class Area(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return ""
 
 class Tema(models.Model):
     id = models.AutoField(primary_key=True)
@@ -30,7 +30,7 @@ class Tema(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return ""
 
 class Usuario(models.Model):
     id = models.AutoField(primary_key=True)
@@ -47,7 +47,7 @@ class Usuario(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return ""
 
 class Pregunta(models.Model):
     id = models.AutoField(primary_key=True)
@@ -60,7 +60,7 @@ class Pregunta(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return ""
 
 class Confiabilidad(models.Model):
     id = models.AutoField(primary_key=True)
@@ -70,7 +70,7 @@ class Confiabilidad(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return ""
 
 class Respuesta(models.Model):
     id = models.AutoField(primary_key=True)
@@ -85,7 +85,7 @@ class Respuesta(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return ""
 
 class Comentario(models.Model):
     id = models.AutoField(primary_key=True)
@@ -98,12 +98,15 @@ class Comentario(models.Model):
     estado = models.BooleanField(null = True)
 
     def __str__(self):
-        return self.codigo
+        return ""
 
-class Calificaciones (models.Model):
+class Calificacion (models.Model):
     id = models.AutoField (primary_key = True)
     usuario = models.ForeignKey (Usuario, on_delete = models.CASCADE, null = True)
     respuesta = models.ForeignKey (Respuesta, on_delete = models.CASCADE, null = True)
     fecha_de_creacion = models.DateTimeField(blank = True, null = True)
     fecha_de_modificacion = models.DateTimeField(blank = True, null = True)
     estado = models.BooleanField(null = True)
+
+    def __str__(self):
+        return ""
