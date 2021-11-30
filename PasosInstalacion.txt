@@ -5,7 +5,9 @@
 4. Crear el entorno virtual con el nombre (virtual) con el siguiente comando: py -m venv virtual, al mismo nivel del archivo get-pip.py
 5. activar el entorno virtual para instalar django, colocar en el terminal lo siguiente: 'virtual\Scripts\activate.bat'
 6. una vez este activado el entorno virtual, se le mostrará en el prompt del terminal al inicio el nombre de (virtual), ejecuten la siguiente instruccion en el terminal, 'pip install -r requirements.txt' , esto instalará todas las dependencias necesarias para el proyecto de CS
-7. Para probar que todo funciona correctamente entrar al proyecto SistemaTutoriales y ejecutar el comando 'py manage.py runserver' e ingresar al navegador con la siguiente url : http://127.0.0.1:8000/prueba/
+7. Instalar mysql workbench (ver tutoriales), durante la instalación cuando solicite colocar usuario 'root' y contraseña '1234' para estandarizar el proyecto 
+8. Para estandarizar el proyecto, crear una base de datos con el nombre 'stdb' en mysql workbench, revisar el archivo settings.py, inspeccionar variable DATABASES
+9. Para probar que todo funciona correctamente entrar al proyecto SistemaTutoriales y ejecutar el comando 'py manage.py runserver' e ingresar al navegador con la siguiente url : http://127.0.0.1:8000/prueba/
 
 Nota: para desactivar el entorno virtual usar el comando 'deactivate' , cada vez que se vuelva a usar el proyecto ejecutar el paso 5
 
