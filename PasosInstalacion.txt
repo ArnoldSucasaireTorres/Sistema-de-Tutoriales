@@ -1,4 +1,5 @@
 1. Descargar python en su computadora la version será 3.10.0
+//en caso no tener pip seguir paso 2 y 3, de lo contrario saltar al paso 4
 2. Abrir la terminal en modo administrador y situarse en la ruta donde se encuentra el archivo get-pip.py
 3. colocar el siguiente comando (python3 get-pip.py) o (py get-pip.py) para instalar pip
 4. Crear el entorno virtual con el nombre (virtual) con el siguiente comando: py -m venv virtual, al mismo nivel del archivo get-pip.py
