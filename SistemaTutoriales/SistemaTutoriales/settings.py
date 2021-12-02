@@ -80,6 +80,7 @@ DATABASES = {
         'NAME': 'stdb',
         'USER': 'root',
         'PASSWORD': '',
+#        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '',
     }
