@@ -18,8 +18,10 @@ from django.urls import path
 from django.conf.urls import include,url
 #clases propias
 from SistemaTutoriales.views import hola
+from . import views
 #from SistemaTutoriales/views.py import hola
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^prueba/$',hola),
+    path('', views.index, name='index')
 ]
