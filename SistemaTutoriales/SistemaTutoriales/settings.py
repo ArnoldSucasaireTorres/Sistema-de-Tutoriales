@@ -71,7 +71,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'SistemaTutoriales.wsgi.application'
 
 
-# Database
+# Database 127.0.0.1
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
@@ -79,10 +79,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stdb',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '3306',
-
+        'PORT': '',
     }
 }
 
