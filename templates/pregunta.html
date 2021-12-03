@@ -1,0 +1,10 @@
+{%extends "foro.html"%}
+{%block cuerpo %}
+<br>{{pregunta}} <br>
+{{pregunta.descripcion}}
+<p>Respuestas:</p>
+{% for e in respuestas %}
+    <p>{{e.contenido}}</p><br>
+{%endfor%}
+{%endblock%}
+
