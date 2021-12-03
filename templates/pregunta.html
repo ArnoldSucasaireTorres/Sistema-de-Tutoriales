@@ -1,10 +1,43 @@
 {%extends "foro.html"%}
 {%block cuerpo %}
+<br><input type="checkbox" id="resp_normal" value="resp_normal">
+<label for="resp_normal">Ver respuestas comunes</label>
 <br>{{pregunta}} <br>
 {{pregunta.descripcion}}
 <p>Respuestas:</p>
-{% for e in respuestas %}
-    <p>{{e.contenido}}</p><br>
-{%endfor%}
-{%endblock%}
+<div id="ajax">
+    {%include "respuestas.html" %}
+</div>
+<script>
+    //Para respuestas normales
+    let resp_normal = document.getElementById("resp_normal");
 
+
+    resp_normal.addEventListener('click', r_comunes);
+
+
+    function r_comunes() {
+        if (resp_normal.checked == true) {
+            let ajax = new XMLHttpRequest();
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("ajax").innerHTML = this.responseText;
+                }
+            }
+            ajax.open("GET", "/pregunta/?id={{pregunta.id}}&comun=1", true);
+            ajax.send();
+        }
+        else {
+            let ajax = new XMLHttpRequest();
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("ajax").innerHTML = this.responseText;
+                }
+            }
+            ajax.open("GET", "/pregunta/?id={{pregunta.id}}&confi=2", true);
+            ajax.send();
+        }
+
+    }
+</script>
+{%endblock%}

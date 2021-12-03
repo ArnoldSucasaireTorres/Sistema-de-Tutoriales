@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 
 from usuarios import models as usuarios
@@ -17,6 +18,21 @@ def foro(request):
     return render(request,'foro.html',{"preguntas": preguntas})
 
 def pregunta(request):
-    pregunta = usuarios.Pregunta.objects.get(id=request.GET.get('id',''))
-    respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id))
+    if request.GET.get("id",""):
+        try:
+            pregunta = usuarios.Pregunta.objects.get(id=request.GET.get('id',''))
+            respuestas=()
+        except ObjectDoesNotExist:
+            return HttpResponse("Pregunta no encontrada")
+    else:
+        return HttpResponse("pregunta no encontrada")
+    
+    if request.GET.get("comun",""):
+        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 1))
+        return render(request,'respuestas.html',{"respuestas":respuestas})
+    elif request.GET.get("confi",""):
+        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 2))
+        return render(request,'respuestas.html',{"respuestas":respuestas})
+    respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id,confiabilidad_id = 2))
     return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":respuestas})
+
