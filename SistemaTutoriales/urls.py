@@ -17,9 +17,14 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include,url
 #clases propias
+
 from SistemaTutoriales.views import index
+from usuarios import views as vu
+
 #from SistemaTutoriales/views.py import hola
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
+    url(r'^foro/$', vu.foro),
+    url(r'^respuesta/$',vu.foro),
 ]
