@@ -18,6 +18,7 @@ def foro(request):
     return render(request,'foro.html',{"preguntas": preguntas})
 
 def pregunta(request):
+    #recibimos el id de la pregunta seleccionada en foro
     if request.GET.get("id",""):
         try:
             pregunta = usuarios.Pregunta.objects.get(id=request.GET.get('id',''))
@@ -26,7 +27,7 @@ def pregunta(request):
             return HttpResponse("Pregunta no encontrada")
     else:
         return HttpResponse("pregunta no encontrada")
-    
+    #verificamos que las respuestas a la pregunta sea confiable o no
     if request.GET.get("comun",""):
         respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 1))
         return render(request,'respuestas.html',{"respuestas":respuestas})

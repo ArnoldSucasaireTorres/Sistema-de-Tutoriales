@@ -1,4 +1,20 @@
+
+<div id="n_respuestas">{{respuestas|length}}</div>
 {% for respuesta in respuestas %}
 <p>{{respuesta.contenido}}</p><br>
 
+{%load static %}
+<img src="{% static 'like.png' %}" alt="like" id="like{{respuesta.id}}" style="
+            height: 20px; 
+            width: 20px;
+            cursor:pointer;
+            padding: 5px 5px;">
+<p>{{respuesta.id}}</p>
+{%load static %}
+<img src="{% static 'dislike.png' %}" alt="dislike" id="dislike{{respuesta.id}}" style="
+            height: 20px; 
+            width: 20px;
+            cursor:pointer;
+            padding: 5px 5px;">
+<p>{{respuesta.id}}</p>
 {%endfor%}
