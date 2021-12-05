@@ -21,6 +21,9 @@ from django.conf.urls import include,url
 from SistemaTutoriales.views import index
 from usuarios import views as vu
 
+#Para el login que trae Django
+from django.contrib.auth.views import LoginView, LogoutView
+
 #from SistemaTutoriales/views.py import hola
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +31,9 @@ urlpatterns = [
     url(r'^foro/$', vu.foro),
     #url(r'^respuesta/$',vu.foro),
     url(r'^pregunta/$',vu.pregunta),
-    path('registro/', vu.registro, name='registro'),
     path('foro/', vu.foro, name='foro'),
+    #ruta para el registro, login y logout
+    path('registro/', vu.registro, name='registro'),
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout')
 ]
