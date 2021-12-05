@@ -26,6 +26,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     url(r'^foro/$', vu.foro),
-    url(r'^respuesta/$',vu.foro),
+    #url(r'^respuesta/$',vu.foro),
     url(r'^pregunta/$',vu.pregunta),
+    path('registro/', vu.registro, name='registro'),
+    path('foro/', vu.foro, name='foro'),
 ]
