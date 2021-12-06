@@ -23,17 +23,20 @@ from usuarios import views as vu
 
 #Para el login que trae Django
 from django.contrib.auth.views import LoginView, LogoutView
+#Para indicar que es necesario loguearse
+from django.contrib.auth.decorators import login_required
 
 #from SistemaTutoriales/views.py import hola
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
-    url(r'^foro/$', vu.foro),
+    #url(r'^foro/$', vu.foro),
     url(r'^pregunta/$',vu.pregunta),
     url(r'^comentario/$',vu.comentario),
     path('foro/', vu.foro, name='foro'),
     #ruta para el registro, login y logout
     path('registro/', vu.registro, name='registro'),
+    path('accounts/login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout')
 ]
