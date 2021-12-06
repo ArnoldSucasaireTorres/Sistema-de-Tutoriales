@@ -1,20 +1,31 @@
 
-<div id="n_respuestas">{{respuestas|length}}</div>
-{% for respuesta in respuestas %}
-<p>{{respuesta.contenido}}</p><br>
+<div id="n_respuestas" cantidad="{{respuestas|length}}">{{respuestas|length}} respuestas</div>
 
-{%load static %}
-<img src="{% static 'like.png' %}" alt="like" id="like{{respuesta.id}}" style="
-            height: 20px; 
-            width: 20px;
-            cursor:pointer;
-            padding: 5px 5px;">
-<p>{{respuesta.id}}</p>
-{%load static %}
-<img src="{% static 'dislike.png' %}" alt="dislike" id="dislike{{respuesta.id}}" style="
-            height: 20px; 
-            width: 20px;
-            cursor:pointer;
-            padding: 5px 5px;">
-<p>{{respuesta.id}}</p>
+
+{% for respuesta in respuestas %}
+    <p>{{respuesta.0.id}}.- {{respuesta.0}} </p>
+    
+    {%load static %}
+    <img src="{% static 'like.png' %}" alt="like" id="like{{respuesta.id}}" style="
+                height: 20px; 
+                width: 20px;
+                cursor:pointer;
+                padding: 5px 5px;">
+
+    {%load static %}
+    <img src="{% static 'dislike.png' %}" alt="dislike" id="dislike{{respuesta.id}}" style="
+                height: 20px; 
+                width: 20px;
+                cursor:pointer;
+                padding: 5px 5px;">
+    
+    
+    {%if respuesta.1%}
+    
+    <button class="botonComentario" id="ver_com{{respuesta.0.id}}" id_respuesta="{{respuesta.0.id}}" style="cursor:pointer;">ver comentarios</button><br>
+    <p>{{respuesta.1}} comentarios</p>
+    <div id="comentario{{respuesta.0.id}}">
+    </div>
+    {%endif%}
+    
 {%endfor%}

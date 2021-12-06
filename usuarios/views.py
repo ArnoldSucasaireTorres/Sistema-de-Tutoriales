@@ -35,13 +35,57 @@ def pregunta(request):
         return HttpResponse("pregunta no encontrada")
     #verificamos que las respuestas a la pregunta sea confiable o no
     if request.GET.get("comun",""):
-        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 1))
-        return render(request,'respuestas.html',{"respuestas":respuestas})
+        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 1))       
+        
+        num_com_por_resp = []
+        for r in respuestas:
+            '''
+            com_resp= list(usuarios.Comentario.objects.filter(respuesta_id=r.id, comentario_id= null))
+            num_com_resp = len(com_resp)
+            '''
+            com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
+            num_com_por_resp.append([r,len(com)])     
+                    
+        return render(request,'respuestas.html',{"respuestas":num_com_por_resp})
+    
     elif request.GET.get("confi",""):
-        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 2))
-        return render(request,'respuestas.html',{"respuestas":respuestas})
+        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 2))       
+        num_com_por_resp = []
+        for r in respuestas:
+            '''
+            com_resp= list(usuarios.Comentario.objects.filter(respuesta_id=r.id, comentario_id= null))
+            num_com_resp = len(com_resp)
+            '''
+            com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
+            num_com_por_resp.append([r,len(com)])                  
+        return render(request,'respuestas.html',{"respuestas":num_com_por_resp})
+    
     respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id,confiabilidad_id = 2))
-    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":respuestas})
+    num_com_por_resp = []
+    for r in respuestas:
+        '''
+        com_resp= list(usuarios.Comentario.objects.filter(respuesta_id=r.id, comentario_id= null))
+        num_com_resp = len(com_resp)
+        '''
+        com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
+        num_com_por_resp.append([r,len(com)]) 
+    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp})
+
+def comentario(request):
+    respuesta_id=request.GET.get("id_respuesta","")
+    comentario_id=request.GET.get("id_comentario","")
+    comentarios=[]
+    if (not comentario_id):
+        comentarios=list(usuarios.Comentario.objects.filter(respuesta_id = respuesta_id, comentario_id__isnull = True))
+    else:
+        comentarios=list(usuarios.Comentario.objects.filter(comentario_id = comentario_id))
+    
+    num_scom_com=[]
+
+    for comentario in comentarios:
+        com= list(usuarios.Comentario.objects.filter(comentario_id=comentario.id))
+        num_scom_com.append([comentario,len(com)])
+    return render(request,'comentario.html',{"comentarios":num_scom_com})
 
 def registro(request):
     #Hacemos un if para verificar si los campos fueron llenados

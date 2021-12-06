@@ -1,0 +1,12 @@
+<p>Comentarios:</p>
+{%for comentario in comentarios%}
+<p>{{comentario.0.contenido}}</p>
+{%if comentario.1%}
+    <p>{{comentario.1}} comentarios</p>
+    <button class="subbotonComentario" id="scom{{comentario.0.id}}" id_comentario="{{comentario.0.id}}" style="cursor:pointer;">ver comentarios</button><br>
+    {%endif%}
+    <div id="subcomentario{{comentario.0.id}}"></div>
+{%endfor%}
+<br><input type="text">
+<button>Guardar</button>
+

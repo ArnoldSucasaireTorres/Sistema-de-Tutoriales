@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>hola munndo</title>
 </head>
 
 <body>
@@ -15,12 +15,13 @@
     <a href="/login/"><input type="button" style="float: right;" value="Iniciar Sesión"></a>
     <input type="text">
     <input type="button" value="Buscar">
+    
     {%block cuerpo%}
-    <p>Preguntas</p>
-    {% for pregunta in preguntas %}
-    <a href="/pregunta/?id={{pregunta.id}}">{{pregunta.id}}{{pregunta.enunciado}}</a><br>
-    <span>Descripción: </span><span>{{pregunta.descripcion}}</span>
-    {%endfor%}
+        <p>Preguntas</p>
+        {% for pregunta in preguntas %}
+            <a href="/pregunta/?id={{pregunta.id}}">{{pregunta.id}}{{pregunta.enunciado}}</a><br>
+            <span>Descripción: </span><span>{{pregunta.descripcion}}</span>
+        {%endfor%}
     {%endblock%}
 </body>
 

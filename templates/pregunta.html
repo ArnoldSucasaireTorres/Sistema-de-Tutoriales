@@ -3,8 +3,8 @@
 <br><input type="checkbox" id="resp_normal">
 <label for="resp_normal">Ver respuestas comunes</label>
 <br>{{pregunta}} <br>
+<br>
 {{pregunta.descripcion}}
-<p>Respuestas:</p>
 
 <div id="ajax">
     {%include "respuestas.html" %}
@@ -14,52 +14,86 @@
     let resp_normal = document.getElementById("resp_normal");
     resp_normal.addEventListener('click', r_comunes);
     function r_comunes() {
+        //peticion xmlhttprequest general
+        let ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("ajax").innerHTML = this.responseText;
+                //calificacion();
+                //let like = document.getElementById("{{respuesta.0.id}}comentarios");
+                //console.log(like);
+                aniadir_evento_boton_comentario();
+            }
+        }
+        //--------------------------------
         if (resp_normal.checked == true) {
-            let ajax = new XMLHttpRequest();
-            ajax.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("ajax").innerHTML = this.responseText;
-                    likes();
-                    dislikes();
-                }
-            }
             ajax.open("GET", "/pregunta/?id={{pregunta.id}}&comun=1", true);
-            ajax.send();
-            
-            function likes() {
-                let n_respuestas = parseInt(document.getElementById("n_respuestas").innerHTML);
-                for (let i = 1; i <= n_respuestas; i++) {
-                    let like = document.getElementById("like" + i);
-                    like.addEventListener('click', sum_like);
-                }
-
-            }
-            function dislikes() {
-                let n_respuestas = parseInt(document.getElementById("n_respuestas").innerHTML);
-                for (let i = 1; i <= n_respuestas; i++) {
-                    let dislike = document.getElementById("dislike" + i);
-                    dislike.addEventListener('click', quit_like);
-                }
-            }
-        }
+        } 
         else {
-            let ajax = new XMLHttpRequest();
-            ajax.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("ajax").innerHTML = this.responseText;
-                }
-            }
             ajax.open("GET", "/pregunta/?id={{pregunta.id}}&confi=2", true);
-            ajax.send();
         }
-
+        ajax.send();
     }
-    function sum_like() {
+    function calificacion() {
+        let n_respuestas = parseInt(document.getElementById("n_respuestas").getAttribute("cantidad"));
+        
+        /*for (let i = 1; i <= n_respuestas; i++) {
+            let like = document.getElementById("like" + i);
+            like.addEventListener('click', add_calificacion);
+            let dislike = document.getElementById("dislike" + i);
+            dislike.addEventListener('click', add_calificacion);
+            //let comentar = document.getElementById("comentar" + i);
+            //comentar.addEventListener('click', add_comentar);
+        }*/
+    }
+    function add_calificacion() {
         console.log(this.id);
     }
-    function quit_like() {
+    function add_comentar() {
         console.log(this.id);
     }
-
+    function aniadir_evento_boton_comentario() {
+        let arreglo=document.getElementsByClassName("botonComentario");
+        for(let i=0;i<arreglo.length;i++){
+            arreglo[i].addEventListener("click",mostrar_comentarios);
+        }
+    }
+    function mostrar_comentarios(){
+        console.log("comentario"+this.getAttribute("id_respuesta"));
+        var boton="comentario"+this.getAttribute("id_respuesta");
+        let ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById(boton).innerHTML = this.responseText;
+                aniadir_evento_boton_subcomentario();
+            }
+        }
+        let url="/comentario/?id_respuesta="+this.getAttribute("id_respuesta");
+        ajax.open("GET",url,true);
+        ajax.send();
+        
+    }
+    function aniadir_evento_boton_subcomentario(){
+        let arreglo=document.getElementsByClassName("subbotonComentario");
+        for(let i=0;i<arreglo.length;i++){
+            arreglo[i].addEventListener("click",mostrar_subcomentarios);
+        }
+    }
+    function mostrar_subcomentarios(){
+        console.log(this);
+        
+        var boton="subcomentario"+this.getAttribute("id_comentario");
+        let ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById(boton).innerHTML = this.responseText;
+                aniadir_evento_boton_subcomentario();
+            }
+        }
+        let url="/comentario/?id_comentario="+this.getAttribute("id_comentario");
+        ajax.open("GET",url,true);
+        ajax.send();
+        
+    }
 </script>
 {%endblock%}
