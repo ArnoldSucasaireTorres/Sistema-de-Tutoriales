@@ -7,6 +7,10 @@
     {%endif%}
     <div id="subcomentario{{comentario.0.id}}"></div>
 {%endfor%}
+{%if request.session.is_empty%}
+<p>no se inicio session</p>
+{%else%}
 <br><input type="text">
 <button>Guardar</button>
+{%endif%}
 

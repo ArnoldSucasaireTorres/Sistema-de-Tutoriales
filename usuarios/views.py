@@ -13,18 +13,14 @@ from usuarios import models as usuarios
 import datetime
 def foro(request):
     preguntas = list(usuarios.Pregunta.objects.all())
-    #fc=datetime.datetime(2021,12,3,10,00)
-    #fm=datetime.datetime(2021,12,3,10,00)
-    #area2=usuarios.Area(
-     #   nombre="Algebra",
-      #  fecha_de_creacion=str(fc),
-       # fecha_de_modificacion=str(fm),
-        #estado=True)
-    #area2.save()
-    return render(request,'foro.html',{"preguntas": preguntas})
+    temas = list(usuarios.Tema.objects.all())
+    areas = list(usuarios.Area.objects.all())
+    return render(request,'foro.html',{"preguntas": preguntas,"temas":temas,"areas":areas})
 
 def pregunta(request):
     #recibimos el id de la pregunta seleccionada en foro
+    temas = list(usuarios.Tema.objects.all())
+    areas = list(usuarios.Area.objects.all())
     if request.GET.get("id",""):
         try:
             pregunta = usuarios.Pregunta.objects.get(id=request.GET.get('id',''))
@@ -52,10 +48,6 @@ def pregunta(request):
         respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 2))       
         num_com_por_resp = []
         for r in respuestas:
-            '''
-            com_resp= list(usuarios.Comentario.objects.filter(respuesta_id=r.id, comentario_id= null))
-            num_com_resp = len(com_resp)
-            '''
             com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
             num_com_por_resp.append([r,len(com)])                  
         return render(request,'respuestas.html',{"respuestas":num_com_por_resp})
@@ -63,13 +55,10 @@ def pregunta(request):
     respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id,confiabilidad_id = 2))
     num_com_por_resp = []
     for r in respuestas:
-        '''
-        com_resp= list(usuarios.Comentario.objects.filter(respuesta_id=r.id, comentario_id= null))
-        num_com_resp = len(com_resp)
-        '''
         com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
         num_com_por_resp.append([r,len(com)]) 
-    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp})
+
+    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas})
 
 def comentario(request):
     respuesta_id=request.GET.get("id_respuesta","")
@@ -86,6 +75,76 @@ def comentario(request):
         com= list(usuarios.Comentario.objects.filter(comentario_id=comentario.id))
         num_scom_com.append([comentario,len(com)])
     return render(request,'comentario.html',{"comentarios":num_scom_com})
+
+#likes y dislikes
+def calificacion(request):
+    usuario=request.GET.get("usuario","")
+    usuario=usuarios.Usuario.objects.get(usuario=usuario)
+    cal=request.GET["like"] if request.GET.get("like","") else request.GET["dislike"]
+    respuesta=usuarios.Respuesta.objects.get(id=cal)
+    if request.GET.get("like",""):
+        if usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal).exists():
+            
+            califi=list(usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal))[0]
+            print(califi.estado)
+            if (califi.estado == True):
+                respuesta.num_buena_calificacion=respuesta.num_buena_calificacion-1
+                respuesta.save()
+                califi.delete()
+            else:
+                califi.estado = True
+                respuesta.num_buena_calificacion=respuesta.num_buena_calificacion+1
+                respuesta.num_mala_calificacion=respuesta.num_mala_calificacion-1
+                respuesta.save()
+                califi.save()
+        
+        else:
+            ahora = dt.now()
+            fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+            califi=usuarios.Calificacion(
+                fecha_de_creacion=fecha,
+                fecha_de_modificacion=fecha,
+                estado=True,
+                respuesta_id=cal,
+                usuario_id=usuario.id                
+            )
+            califi.save()
+            respuesta.num_buena_calificacion=respuesta.num_buena_calificacion+1
+            respuesta.save()
+            return HttpResponse(respuesta.num_buena_calificacion)
+
+    elif request.GET.get("dislike",""):
+        if usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal).exists():
+            
+            califi=list(usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal))[0]
+            print(califi.estado)
+            if (califi.estado == False):
+                respuesta.num_mala_calificacion=respuesta.num_mala_calificacion-1
+                respuesta.save()
+                califi.delete()
+            else:
+                califi.estado = False
+                respuesta.num_buena_calificacion=respuesta.num_buena_calificacion-1
+                respuesta.num_mala_calificacion=respuesta.num_mala_calificacion+1
+                respuesta.save()
+                califi.save()
+        
+        else:
+            ahora = dt.now()
+            fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+            califi=usuarios.Calificacion(
+                fecha_de_creacion=fecha,
+                fecha_de_modificacion=fecha,
+                estado=False,
+                respuesta_id=cal,
+                usuario_id=usuario.id                
+            )
+            califi.save()
+            respuesta.num_mala_calificacion=respuesta.num_mala_calificacion+1
+            respuesta.save()
+            return HttpResponse(respuesta.num_mala_calificacion)
+    
+    return HttpResponse("0")
 
 def registro(request):
     #Hacemos un if para verificar si los campos fueron llenados
@@ -119,3 +178,62 @@ def registro(request):
         form = UserRegisterForm()
     context = { 'form' : form}
     return render(request, 'registro.html', context)
+#buscar
+def search_e(request):
+   
+    preguntas=[]
+    if (request.GET.get("enum","")):
+        enuncia=request.GET["enum"]
+        preguntas=list(usuarios.Pregunta.objects.filter(enunciado__icontains=enuncia))
+    
+    if (request.GET.get("id_ar","")):
+        id_area=request.GET["id_ar"]
+        if not len(preguntas) :
+            preguntas=list(usuarios.Pregunta.objects.filter(area_id=id_area))
+        else:
+            for pregunta in preguntas:
+                if int(pregunta.area_id)==int(id_area):
+                    preguntas.append(pregunta)
+
+    if (request.GET.get("id_tem","")) :
+        id_tema=request.GET["id_tem"]
+        if not len(preguntas) :
+            preguntas=list(usuarios.Pregunta.objects.filter(tema_id=id_tema))
+        else:
+            ptemp=preguntas
+            preguntas=[]
+            for pregunta in ptemp:
+                if int(pregunta.tema_id)==int(id_tema):
+                    preguntas.append(pregunta)
+    '''
+    arrraylist=()
+    arraylist2=()
+    if request.GET["enun"]
+        arraylist.add(enun)
+        arraylis2.add(enunciado__icontains)
+    if request.GET["id_ar"]
+        arraylis2.add(area_id)
+        arraylist.add(id_ar)
+    if request.GET["id_tem"]
+        arraylist.add(id_team)
+        arraylis2.add(tema_id)
+    if request.GET["date"]
+        arraylist.add()
+        arraylis2.add(fecha_de_modificacion)
+    for arraylist 
+       pregunta=list(usuarios.Pregunta.objects.filter(array(0)=arraylist(0))) 
+       
+    '''
+    if (request.GET.get("date","")) :
+        dt=request.GET["date"]
+        if not len(preguntas) :
+            preguntas=list(usuarios.Pregunta.objects.filter(fecha_de_modificacion=dt))
+        else:
+            ptemp=preguntas
+            preguntas=()
+            for pregunta in ptemp:
+                if pregunta.fecha_de_modificacion==dt:
+                    preguntas.append(pregunta)
+    if not len(preguntas):
+        preguntas=[]
+    return render(request,"busqueda.html",{"preguntas":preguntas})       

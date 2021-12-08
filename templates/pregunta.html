@@ -11,6 +11,7 @@
 </div>
 
 <script>
+    calificacion();
     let resp_normal = document.getElementById("resp_normal");
     resp_normal.addEventListener('click', r_comunes);
     function r_comunes() {
@@ -19,7 +20,7 @@
         ajax.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("ajax").innerHTML = this.responseText;
-                //calificacion();
+                calificacion();
                 //let like = document.getElementById("{{respuesta.0.id}}comentarios");
                 //console.log(like);
                 aniadir_evento_boton_comentario();
@@ -35,19 +36,43 @@
         ajax.send();
     }
     function calificacion() {
-        let n_respuestas = parseInt(document.getElementById("n_respuestas").getAttribute("cantidad"));
-        
-        /*for (let i = 1; i <= n_respuestas; i++) {
-            let like = document.getElementById("like" + i);
+        let likes =document.querySelectorAll(".like");
+        let dislikes=document.querySelectorAll(".dislike");
+        for (let i = 0; i < likes.length; i++) {
+            let like = likes[i];
             like.addEventListener('click', add_calificacion);
-            let dislike = document.getElementById("dislike" + i);
+            let dislike = dislikes[i];
             dislike.addEventListener('click', add_calificacion);
             //let comentar = document.getElementById("comentar" + i);
             //comentar.addEventListener('click', add_comentar);
-        }*/
+        }
     }
     function add_calificacion() {
-        console.log(this.id);
+        
+        let usuario=this.getAttribute("usuario");
+        if (usuario) {
+            let objeto=this;
+            let ajax=new XMLHttpRequest();
+            ajax.onreadystatechange=function (){
+                if(this.readyState==4 && this.status==200){
+                    document.getElementById("c"+objeto.id).innerHTML=this.responseText;
+                }
+            }
+            console.log(objeto);
+            let url
+            if(this.getAttribute("class")=="like"){
+                url="/calificacion/?usuario="+usuario+"&like="+objeto.getAttribute("pregunta");
+            }
+            else{
+                url="/calificacion/?usuario="+usuario+"&dislike="+objeto.getAttribute("pregunta");
+            }
+            console.log(url);
+            ajax.open("GET",url,true);
+            ajax.send();
+            
+        }else{
+            window.location.replace("/login/");
+        }
     }
     function add_comentar() {
         console.log(this.id);
@@ -59,7 +84,6 @@
         }
     }
     function mostrar_comentarios(){
-        console.log("comentario"+this.getAttribute("id_respuesta"));
         var boton="comentario"+this.getAttribute("id_respuesta");
         let ajax = new XMLHttpRequest();
         ajax.onreadystatechange = function () {
@@ -79,9 +103,7 @@
             arreglo[i].addEventListener("click",mostrar_subcomentarios);
         }
     }
-    function mostrar_subcomentarios(){
-        console.log(this);
-        
+    function mostrar_subcomentarios(){        
         var boton="subcomentario"+this.getAttribute("id_comentario");
         let ajax = new XMLHttpRequest();
         ajax.onreadystatechange = function () {

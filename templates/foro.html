@@ -21,16 +21,70 @@
     <p style="float: right;" >Bienvenido {{ user.username }} </p>
 {% endif %}
 
-    <input type="text">
-    <input type="button" value="Buscar">
-    
+        <input id="enun" type="text" name="enun" placeholder="Enunciado">
+        
+        <label for="fname"> Area:</label>
+        
+        <select id="id_ar" name="id_ar">
+            {% for area in areas %}
+            <option value="{{area.id}}" >{{area.nombre}}</option>
+            {%endfor%}
+            <option value="0" selected></option> 
+        </select>
+        <label for="fname"> Tema:</label>
+        <select id="id_tem" name="id_tem" >
+            {% for tema in temas %}
+            <option value={{tema.id}} >{{tema.nombre}}</option> 
+            {%endfor%}
+            <option value="0" selected></option>
+        </select>
+        
+        <label for="fname"> Fecha:</label>
+        <input type="date" id ="date" name="date">
+        <button value="Buscar" id="Buscar">Buscar</button>
+
     {%block cuerpo%}
-        <p>Preguntas</p>
-        {% for pregunta in preguntas %}
-            <a href="/pregunta/?id={{pregunta.id}}">{{pregunta.id}}{{pregunta.enunciado}}</a><br>
-            <span>Descripción: </span><span>{{pregunta.descripcion}}</span>
-        {%endfor%}
+    <div id="busqueda_ajax">
+    <p>Preguntas</p>
+    {%include "busqueda.html"%}
+    </div>
     {%endblock%}
+   
+<script>
+let Buscar=document.getElementById("Buscar");
+    Buscar.addEventListener("click",buscar);
+    function buscar() {
+        //peticion xmlhttprequest general
+        let ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("busqueda_ajax").innerHTML = this.responseText;
+            }
+        }
+        let url="/search_e/?";
+        let enun=document.getElementById("enun");
+        let id_ar=document.getElementById("id_ar");
+        let id_tem=document.getElementById("id_tem");
+        let date=document.getElementById("date");
+        
+        if (enun.value){
+            url+="enum="+enun.value+"&";
+        }
+        if (id_ar.value != 0){
+            url+="id_ar="+id_ar.value+"&";
+        }
+        if(id_tem.value !=0){
+            url+="id_tem="+id_tem.value+"&";
+        }
+        if(date.value){
+            url+="date="+date.value;
+        }
+        console.log(url);
+        ajax.open("GET", url, true);
+        ajax.send();
+    }
+</script>
+
 </body>
 
 </html>
