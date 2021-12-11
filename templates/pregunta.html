@@ -3,28 +3,28 @@
 <div id="busqueda_ajax">
 <br><input type="checkbox" id="resp_normal">
 <label for="resp_normal">Ver respuestas comunes</label>
-<br>{{pregunta}} <br>
-<br>
+<h3>{{pregunta}} </h3>
 {{pregunta.descripcion}}
-
 <div id="ajax">
     {%include "respuestas.html" %}
 </div>
 </div>
 <script>
     calificacion();
+    aniadir_evento_boton_respuesta();
     let resp_normal = document.getElementById("resp_normal");
     resp_normal.addEventListener('click', r_comunes);
     function r_comunes() {
-        //peticion xmlhttprequest general
         let ajax = new XMLHttpRequest();
         ajax.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("ajax").innerHTML = this.responseText;
                 calificacion();
-                //let like = document.getElementById("{{respuesta.0.id}}comentarios");
-                //console.log(like);
                 aniadir_evento_boton_comentario();
+                //una vez que se carga las respuestas para cada pregunta se
+                //asigna a comentario un evento
+                aniadir_evento_boton_respuesta();
+                aniadir_evento_eliminar_editar();
             }
         }
         //--------------------------------
@@ -35,6 +35,63 @@
             ajax.open("GET", "/pregunta/?id={{pregunta.id}}&confi=2", true);
         }
         ajax.send();
+    }
+    function aniadir_evento_eliminar_editar(){
+        let eliminar =document.querySelectorAll(".eliminar");
+        let editar =document.querySelectorAll(".editar");
+        for (let i = 0; i < eliminar.length; i++) {
+            let elim = eliminar[i];
+            elim.addEventListener('click', eliminar_Respuesta);
+            let edit = editar[i];
+            edit.addEventListener('click', editar_Respuesta);
+            //let comentar = document.getElementById("comentar" + i);
+            //comentar.addEventListener('click', add_comentar);
+        }
+    }
+    function eliminar_Respuesta(){
+        let objeto=this;
+        let ajax=new XMLHttpRequest();
+        ajax.onreadystatechange=function (){
+            if(this.readyState==4 && this.status == 200){
+                console.log(this.responseText);
+                r_comunes();
+            }
+        }
+        url="respuesta_id="+objeto.getAttribute("respuesta_id");
+        ajax.open('GET',"/eRespuesta/?"+url,true)
+        ajax.send();
+    }
+    function editar_Respuesta(){
+        console.log(this);
+    }
+    function aniadir_evento_boton_respuesta() {
+        let respuestaB=document.getElementById("nueva_respuestaB");
+        respuestaB.addEventListener("click",aniadir_respuesta);
+    }
+    function aniadir_respuesta(){
+        let respuesta=document.getElementById("nueva_respuesta");
+        if ("{{user.username}}") {
+            if (respuesta.value){
+                let ajax=new XMLHttpRequest();
+                ajax.onreadystatechange=function (){
+                    if(this.readyState==4 && this.status == 200){
+                        console.log(this.responseText);
+                        r_comunes();
+                    }
+                }
+                url="contenido="+respuesta.value+"&usuario="+"{{user.username}}&"+"pregunta_id="+"{{id_pregunta}}";
+                ajax.open('GET',"/aRespuesta/?"+url,true)
+                ajax.send();
+                respuesta.value="";  
+            }
+            else{
+                console.log("no ingreso nada");
+            }
+        }else{
+            window.location.replace("/login/");
+        }
+        
+    
     }
     function calificacion() {
         let likes =document.querySelectorAll(".like");
@@ -49,23 +106,26 @@
         }
     }
     function add_calificacion() {
-        
         let usuario=this.getAttribute("usuario");
         if (usuario) {
             let objeto=this;
             let ajax=new XMLHttpRequest();
             ajax.onreadystatechange=function (){
                 if(this.readyState==4 && this.status==200){
-                    document.getElementById("c"+objeto.id).innerHTML=this.responseText;
+                    let likes_dislikes = JSON.parse(this.responseText);
+                    console.log(likes_dislikes)
+                    document.getElementById("clike"+objeto.getAttribute("respuesta_id")).innerHTML=likes_dislikes.likes;
+                    document.getElementById("cdislike"+objeto.getAttribute("respuesta_id")).innerHTML=likes_dislikes.dislikes;
+                  
                 }
             }
             console.log(objeto);
             let url
             if(this.getAttribute("class")=="like"){
-                url="/calificacion/?usuario="+usuario+"&like="+objeto.getAttribute("pregunta");
+                url="/calificacion/?usuario="+usuario+"&like="+objeto.getAttribute("respuesta_id");
             }
             else{
-                url="/calificacion/?usuario="+usuario+"&dislike="+objeto.getAttribute("pregunta");
+                url="/calificacion/?usuario="+usuario+"&dislike="+objeto.getAttribute("respuesta_id");
             }
             console.log(url);
             ajax.open("GET",url,true);
@@ -75,9 +135,7 @@
             window.location.replace("/login/");
         }
     }
-    function add_comentar() {
-        console.log(this.id);
-    }
+
     function aniadir_evento_boton_comentario() {
         let arreglo=document.getElementsByClassName("botonComentario");
         for(let i=0;i<arreglo.length;i++){

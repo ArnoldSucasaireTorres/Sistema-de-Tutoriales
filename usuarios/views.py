@@ -32,7 +32,6 @@ def pregunta(request):
     #verificamos que las respuestas a la pregunta sea confiable o no
     if request.GET.get("comun",""):
         respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 1))       
-        
         num_com_por_resp = []
         for r in respuestas:
             '''
@@ -40,25 +39,28 @@ def pregunta(request):
             num_com_resp = len(com_resp)
             '''
             com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
-            num_com_por_resp.append([r,len(com)])     
+            usuario = usuarios.Usuario.objects.get(id=r.usuario_id)
+            num_com_por_resp.append([r,len(com),usuario])     
                     
-        return render(request,'respuestas.html',{"respuestas":num_com_por_resp})
+        return render(request,'respuestas.html',{"respuestas":num_com_por_resp,"id_pregunta":request.GET.get("id","")})
     
     elif request.GET.get("confi",""):
         respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 2))       
         num_com_por_resp = []
         for r in respuestas:
             com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
-            num_com_por_resp.append([r,len(com)])                  
+            usuario = usuarios.Usuario.objects.get(id=r.usuario_id)
+            num_com_por_resp.append([r,len(com),usuario])              
         return render(request,'respuestas.html',{"respuestas":num_com_por_resp})
     
     respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id,confiabilidad_id = 2))
     num_com_por_resp = []
     for r in respuestas:
         com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
-        num_com_por_resp.append([r,len(com)]) 
+        usuario = usuarios.Usuario.objects.get(id=r.usuario_id)
+        num_com_por_resp.append([r,len(com),usuario])
 
-    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas})
+    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas,"id_pregunta":request.GET.get("id","")})
 
 def comentario(request):
     respuesta_id=request.GET.get("id_respuesta","")
@@ -111,7 +113,7 @@ def calificacion(request):
             califi.save()
             respuesta.num_buena_calificacion=respuesta.num_buena_calificacion+1
             respuesta.save()
-            return HttpResponse(respuesta.num_buena_calificacion)
+            return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
 
     elif request.GET.get("dislike",""):
         if usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal).exists():
@@ -142,9 +144,10 @@ def calificacion(request):
             califi.save()
             respuesta.num_mala_calificacion=respuesta.num_mala_calificacion+1
             respuesta.save()
-            return HttpResponse(respuesta.num_mala_calificacion)
+            return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
     
-    return HttpResponse("0")
+    return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
+
 
 def registro(request):
     #Hacemos un if para verificar si los campos fueron llenados
@@ -194,3 +197,29 @@ def search_e(request):
             filtro[indices[i]]=objetos[i]      
     preguntas=list(usuarios.Pregunta.objects.filter(**filtro))
     return render(request,"busqueda.html",{"preguntas":preguntas}) 
+
+def aniadir_respuesta(request):
+    usuario=request.GET.get("usuario","")
+    pregunta_id=request.GET.get("pregunta_id","")
+    contenido=request.GET.get("contenido","")
+    ahora = dt.now()
+    fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+    usuario=usuarios.Usuario.objects.get(usuario=usuario)
+    respuesta_nueva=usuarios.Respuesta(
+        contenido=contenido,
+        num_buena_calificacion=0,
+        num_mala_calificacion=0,
+        fecha_de_creacion=fecha,
+        fecha_de_modificacion=fecha,
+        estado=1,
+        confiabilidad_id=1,
+        pregunta_id=int(pregunta_id),
+        usuario_id=usuario.id                
+    )
+    respuesta_nueva.save()
+    return HttpResponse("se añadio respuesta "+str(usuario)+" "+str(usuario.id))
+
+def eliminar_respuesta(request):
+    respuesta_id=request.GET.get("respuesta_id","")
+    resp_eliminada=usuarios.Respuesta.objects.get(id=respuesta_id).delete()
+    return HttpResponse("se elimino")

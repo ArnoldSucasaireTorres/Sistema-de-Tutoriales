@@ -2,21 +2,27 @@
 <div id="n_respuestas" cantidad="{{respuestas|length}}">{{respuestas|length}} respuestas</div>
 {% for respuesta in respuestas %}
     <p>{{forloop.counter}}.- {{respuesta.0}} </p>
-    
+    {%if user.username == respuesta.2.usuario%}
+    <span respuesta_id="{{respuesta.0.id}}" class="eliminar" style="cursor: pointer">Eliminar</span><br>
+    <span respuesta_id="{{respuesta.0.id}}" class="editar" style="cursor: pointer">editar</span>
+    {%endif%}
     {%load static %}
     <table>
-    <tr><td><img usuario="{{user.username}}" pregunta="{{respuesta.0.id}}" src="{% static 'like.png' %}" class="like" alt="like" id="like{{respuesta.0.id}}" style="
+    <tr><td><img usuario="{{user.username}}" respuesta_id="{{respuesta.0.id}}" src="{% static 'like.png' %}" class="like" alt="like" id="like{{respuesta.0.id}}" 
+            style="
                 height: 20px; 
                 width: 20px;
                 cursor:pointer;
                 padding: 5px 5px;"></td>
-        <td><img usuario="{{user.username}}" pregunta="{{respuesta.0.id}}" src="{% static 'dislike.png' %}" class="dislike" alt="dislike" id="dislike{{respuesta.0.id}}" style="
+        <td><img usuario="{{user.username}}" respuesta_id="{{respuesta.0.id}}" src="{% static 'dislike.png' %}" class="dislike" alt="dislike" id="dislike{{respuesta.0.id}}" 
+            style="
                 height: 20px; 
                 width: 20px;
                 cursor:pointer;
                 padding: 5px 5px;"></td>
     </tr>
-    <tr><td id="clike{{respuesta.0.id}}">0</td><td id="cdislike{{respuesta.0.id}}">0</td></tr>
+    <tr><td id="clike{{respuesta.0.id}}">{{respuesta.0.num_buena_calificacion}}</td>
+    <td id="cdislike{{respuesta.0.id}}">{{respuesta.0.num_mala_calificacion}}</td></tr>
     </table>
     {%if respuesta.1%}
     <button class="botonComentario" id="ver_com{{respuesta.0.id}}" id_respuesta="{{respuesta.0.id}}" style="cursor:pointer;">ver comentarios</button><br>
@@ -25,5 +31,6 @@
     </div>
     {%endif%}
 {%endfor%}
-<textarea id="nueva_respuesta" type="text" name="nueva_respuesta" placeholder="Ingresa tu respuesta"></textarea>
-<button value="nueva_resp" id="nueva_resp">Enviar Respuesta</button>
+<div id="nuevoComAjax">nuevo Respuesta</div>
+<textarea pregunta="{{id_pregunta}}" id="nueva_respuesta" type="text" name="nueva_respuesta" placeholder="Ingresa tu respuesta"></textarea>
+<button value="nueva_resp" id="nueva_respuestaB">Enviar Respuesta</button>
