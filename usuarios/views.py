@@ -178,10 +178,30 @@ def registro(request):
         form = UserRegisterForm()
     context = { 'form' : form}
     return render(request, 'registro.html', context)
+
 #buscar
 def search_e(request):
-   
-    preguntas=[]
+    
+    indices = ["enunciado__icontains", "area_id", "tema_id", "fecha_de_modificacion__gte"]
+    enunciado = request.GET.get("enum","")
+    area = request.GET.get("id_ar","")
+    tema = request.GET.get("id_tem","")
+    fecha = request.GET.get("date","")
+    objetos = [enunciado, area, tema, fecha]
+    filtro = {}
+    
+    for i in range (4):
+        if objetos[i] != "":
+            filtro[indices[i]]=objetos[i]
+            
+                
+    print("*****************************")
+    preguntas=list(usuarios.Pregunta.objects.filter(**filtro))
+    print(filtro)
+    return render(request,"busqueda.html",{"preguntas":preguntas}) 
+
+    """
+    filtro={}
     if (request.GET.get("enum","")):
         enuncia=request.GET["enum"]
         preguntas=list(usuarios.Pregunta.objects.filter(enunciado__icontains=enuncia))
@@ -205,25 +225,8 @@ def search_e(request):
             for pregunta in ptemp:
                 if int(pregunta.tema_id)==int(id_tema):
                     preguntas.append(pregunta)
-    '''
-    arrraylist=()
-    arraylist2=()
-    if request.GET["enun"]
-        arraylist.add(enun)
-        arraylis2.add(enunciado__icontains)
-    if request.GET["id_ar"]
-        arraylis2.add(area_id)
-        arraylist.add(id_ar)
-    if request.GET["id_tem"]
-        arraylist.add(id_team)
-        arraylis2.add(tema_id)
-    if request.GET["date"]
-        arraylist.add()
-        arraylis2.add(fecha_de_modificacion)
-    for arraylist 
-       pregunta=list(usuarios.Pregunta.objects.filter(array(0)=arraylist(0))) 
-       
-    '''
+    
+
     if (request.GET.get("date","")) :
         dt=request.GET["date"]
         if not len(preguntas) :
@@ -236,4 +239,5 @@ def search_e(request):
                     preguntas.append(pregunta)
     if not len(preguntas):
         preguntas=[]
-    return render(request,"busqueda.html",{"preguntas":preguntas})       
+    return render(request,"busqueda.html",{"preguntas":preguntas})   
+"""

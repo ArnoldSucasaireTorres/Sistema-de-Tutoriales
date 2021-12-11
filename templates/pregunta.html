@@ -1,5 +1,6 @@
 {%extends "foro.html"%}
 {%block cuerpo %}
+<div id="busqueda_ajax">
 <br><input type="checkbox" id="resp_normal">
 <label for="resp_normal">Ver respuestas comunes</label>
 <br>{{pregunta}} <br>
@@ -9,7 +10,7 @@
 <div id="ajax">
     {%include "respuestas.html" %}
 </div>
-
+</div>
 <script>
     calificacion();
     let resp_normal = document.getElementById("resp_normal");
@@ -115,7 +116,6 @@
         let url="/comentario/?id_comentario="+this.getAttribute("id_comentario");
         ajax.open("GET",url,true);
         ajax.send();
-        
     }
 </script>
 {%endblock%}
