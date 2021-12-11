@@ -181,7 +181,6 @@ def registro(request):
 
 #buscar
 def search_e(request):
-    
     indices = ["enunciado__icontains", "area_id", "tema_id", "fecha_de_modificacion__gte"]
     enunciado = request.GET.get("enum","")
     area = request.GET.get("id_ar","")
@@ -192,52 +191,6 @@ def search_e(request):
     
     for i in range (4):
         if objetos[i] != "":
-            filtro[indices[i]]=objetos[i]
-            
-                
-    print("*****************************")
+            filtro[indices[i]]=objetos[i]      
     preguntas=list(usuarios.Pregunta.objects.filter(**filtro))
-    print(filtro)
     return render(request,"busqueda.html",{"preguntas":preguntas}) 
-
-    """
-    filtro={}
-    if (request.GET.get("enum","")):
-        enuncia=request.GET["enum"]
-        preguntas=list(usuarios.Pregunta.objects.filter(enunciado__icontains=enuncia))
-    
-    if (request.GET.get("id_ar","")):
-        id_area=request.GET["id_ar"]
-        if not len(preguntas) :
-            preguntas=list(usuarios.Pregunta.objects.filter(area_id=id_area))
-        else:
-            for pregunta in preguntas:
-                if int(pregunta.area_id)==int(id_area):
-                    preguntas.append(pregunta)
-
-    if (request.GET.get("id_tem","")) :
-        id_tema=request.GET["id_tem"]
-        if not len(preguntas) :
-            preguntas=list(usuarios.Pregunta.objects.filter(tema_id=id_tema))
-        else:
-            ptemp=preguntas
-            preguntas=[]
-            for pregunta in ptemp:
-                if int(pregunta.tema_id)==int(id_tema):
-                    preguntas.append(pregunta)
-    
-
-    if (request.GET.get("date","")) :
-        dt=request.GET["date"]
-        if not len(preguntas) :
-            preguntas=list(usuarios.Pregunta.objects.filter(fecha_de_modificacion=dt))
-        else:
-            ptemp=preguntas
-            preguntas=()
-            for pregunta in ptemp:
-                if pregunta.fecha_de_modificacion==dt:
-                    preguntas.append(pregunta)
-    if not len(preguntas):
-        preguntas=[]
-    return render(request,"busqueda.html",{"preguntas":preguntas})   
-"""
