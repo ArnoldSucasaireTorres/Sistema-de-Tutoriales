@@ -21,12 +21,9 @@ from django.conf.urls import include,url
 from SistemaTutoriales.views import index
 from usuarios import views as vu
 
-#Para el login que trae Django
-from django.contrib.auth.views import LoginView, LogoutView
-#Para indicar que es necesario loguearse
-from django.contrib.auth.decorators import login_required
+#Clases para el login
+from . import views as vw
 
-#from SistemaTutoriales/views.py import hola
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
@@ -38,10 +35,8 @@ urlpatterns = [
     url(r'^eRespuesta/$',vu.eliminar_respuesta),
     path('foro/', vu.foro, name='foro'),
     #ruta para el registro, login y logout
-    path('registro/', vu.registro, name='registro'),
-    path('accounts/login/', LoginView.as_view(template_name='login.html'), name='login'),
-    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('login', vw.login, name='login'),
+    path('register', vw.register, name='register'),
     #ruta del search
     path('search_e/', vu.search_e),
 ]
