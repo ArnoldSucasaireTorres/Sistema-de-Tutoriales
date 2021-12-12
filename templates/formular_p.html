@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <form action="/Enviar_Pregunta/" class="form" method="get">
+        <label for="fname"> Titulo:</label><br>
+        <textarea id="enun" name="enun" rows="1" cols="45" autofocus="" required="" placeholder="Escribir la pregunta"></textarea><br>
+        <label for="fname"> Area:</label>
+        <select id="id_ar" name="id_ar">
+            {% for area in areas %}
+            <option value="{{area.id}}" >{{area.nombre}}</option>
+            {%endfor%}
+            <option value="0" selected></option> 
+        </select><br>
+        <label for="fname"> Tema:</label>
+        <select id="id_tem" name="id_tem" >
+            {% for tema in temas %}
+            <option value={{tema.id}} >{{tema.nombre}}</option> 
+            {%endfor%}
+            <option value="0" selected></option>
+        </select><br>
+        
+        
+        <label for="fname"> Descripcion:</label><br>
+        <textarea id="descrip" name="descrip" rows="4" cols="45" placeholder="¿Porque geneneraste la pregunta?"></textarea><br>
+        <button type="submit" id="Enviar">Enviar</button>
+    </form>   
+</body>
+</html> 

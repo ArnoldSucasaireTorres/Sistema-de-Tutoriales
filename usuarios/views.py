@@ -5,12 +5,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime as dt
 from django.contrib import messages
 from .forms import UserRegisterForm
+from django.contrib.auth.models import auth
 
+
+from django.urls import reverse
 
 # Create your views here.
 
 from usuarios import models as usuarios
 import datetime
+from datetime import date, time #Jim
+
 def foro(request):
     preguntas = list(usuarios.Pregunta.objects.all())
     temas = list(usuarios.Tema.objects.all())
@@ -223,3 +228,124 @@ def eliminar_respuesta(request):
     respuesta_id=request.GET.get("respuesta_id","")
     resp_eliminada=usuarios.Respuesta.objects.get(id=respuesta_id).delete()
     return HttpResponse("se elimino")
+
+def editar_respuesta(request):
+    respuesta_id=request.GET.get("id","")
+    contenido=request.GET.get("nuevoContenido","")
+    respuesta=usuarios.Respuesta.objects.filter(id=int(respuesta_id)).update(contenido=contenido)
+    return HttpResponse("se cambio contenido")
+
+def verHistorial(request, id):
+    #Importamos todos los usuarios, preguntas y respuestas
+    allUsers=usuarios.Usuario.objects.all()
+    allQuestions=usuarios.Pregunta.objects.all()
+    allAnswers=usuarios.Respuesta.objects.all()
+
+    userQuestions=usuarios.Pregunta.objects.filter(usuario=id)
+    userAnswers=usuarios.Respuesta.objects.filter(usuario=id)
+    currUser=usuarios.Usuario.objects.get(id=id)
+    print(currUser.nombre)
+    currUser=auth.authenticate(username=currUser.usuario,password=currUser.contrasenia)
+    auth.login(request,currUser)
+    currUser=usuarios.Usuario.objects.get(id=id)
+    return render(request, "verHistorial.html", {'currUser': currUser, 'questions': userQuestions, 'answers': userAnswers ,'allQuestions' : allQuestions, 'allAnswers':allAnswers, 'users':allUsers } )
+
+def editarPerfil(request, id):
+    if request.method=='POST':
+        print("Se edita el usuario")
+        editUser=usuarios.Usuario.objects.get(id=id)
+        editUser.nombre=request.POST['nombre']
+        editUser.contrasenia=request.POST['contrasenia']
+        editUser.Celular=request.POST['celular']
+        try :
+            editUser.fecha_de_nacimiento=request.POST['nacimiento']
+        except:
+            editUser.fecha_de_nacimiento=date(2020,1,1)
+        hoy=dt.now()
+        print(hoy.day)
+        print(hoy.month)
+        print(hoy.year)
+        #editUser.fecha_de_modificacion=hoy.strftime('%d-%m-%Y') #- datetime.date.today
+        #editUser.fecha_de_modificacion=dt.date.today()
+        editUser.fecha_de_modificacion=dt.now()
+        editUser.save()
+        messages.info(request,'Se guardaron los cambios')
+        return render(request,"index.html",{})
+    else:
+        currUser=usuarios.Usuario.objects.get(id=id)
+        print(currUser.fecha_de_nacimiento)
+        fechaCumpleanios=dt(currUser.fecha_de_nacimiento.year, currUser.fecha_de_nacimiento.month, currUser.fecha_de_nacimiento.day)
+        #print(fechaCumpleanios)
+        """
+        print(fechaCumpleanios.day)
+        print(fechaCumpleanios.month)
+        print(fechaCumpleanios.year)
+        """
+        return render(request,"editarPerfil.html",{'currUser':currUser, 'fechaCumpleanios':fechaCumpleanios})
+        #return render(request,"editarPerfil.html",{'currUser':currUser})
+
+def eliminarCuenta(request, id):
+    if request.method=='POST':
+        #print(request.user.nombre)
+        delUser=usuarios.Usuario.objects.get(id=id)
+        if(request.POST['nomUsuario'] == delUser.usuario and delUser.estado == True):
+            delUser.estado = False
+            delUser.save()
+            messages.info(request,'Se elimino la cuenta')
+            return render(request,"index.html",{})
+        else:
+            messages.info(request,'No se pudo eliminar la cuenta')
+            return render(request,"index.html",{})
+    else:
+        return render(request,"editarPerfil.html",{})
+
+def editarPregunta(request, id):
+    if request.method == 'POST':
+        newSentence=request.POST['nPregunta']
+        selQuestion=usuarios.Pregunta.objects.get(id=id)
+        selQuestion.enunciado = newSentence
+        selQuestion.save()
+        print("Se modifico la pregunta")
+        return render(request,"index.html",{})
+        #return reverse('verHistorial',{})
+    else:
+        selQuestion = usuarios.Pregunta.objects.get(id=id)
+        return render(request,"editPregunta.html",{'selQuestion': selQuestion})
+
+def eliminarPregunta(request, id):
+    selQuestion=usuarios.Pregunta.objects.get(id=id)
+    selQuestion.estado = False
+    selQuestion.save()
+    print("Se elimino la pregunta")
+    return render(request,"index.html",{})
+#agregarpregunta
+def formular_p(request):
+    temas = list(usuarios.Tema.objects.all())
+    areas = list(usuarios.Area.objects.all())
+    return render(request, 'formular_p.html',{"temas":temas,"areas":areas})
+    
+def Enviar_Pregunta(request):
+    
+    d_enunciado = request.GET.get("enun","")
+    d_area = request.GET.get("id_ar","")
+    d_tema = request.GET.get("id_tem","")
+    d_descripcion = request.GET.get("descrip","")
+    
+    ahora = dt.now()
+    fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+    #usuario=usuarios.Usuario.objects.get(usuario=usuario)
+    pregunta_nueva=usuarios.Pregunta(
+        enunciado=d_enunciado,
+        area_id=d_area,
+        tema_id=d_tema,
+        descripcion=d_descripcion,
+        fecha_de_creacion=fecha,
+        fecha_de_modificacion=fecha,
+        estado=1,
+       # usuario_id=usuario.id
+                    
+    )
+    pregunta_nueva.save()
+    preguntas = list(usuarios.Pregunta.objects.all())
+    #return render(request, 'foro.html',{"preguntas":preguntas})   
+    return redirect('../foro/',{"preguntas":preguntas})  

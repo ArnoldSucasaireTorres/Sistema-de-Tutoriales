@@ -33,10 +33,20 @@ urlpatterns = [
     url(r'^calificacion/$',vu.calificacion),
     url(r'^aRespuesta/$',vu.aniadir_respuesta),
     url(r'^eRespuesta/$',vu.eliminar_respuesta),
+    url(r'^reRespuesta/$',vu.editar_respuesta),
     path('foro/', vu.foro, name='foro'),
     #ruta para el registro, login y logout
     path('login', vw.login_user, name='login'),
     path('register', vw.register, name='register'),
+    path('logout_user', vw.logout_user, name='logout_user'),
     #ruta del search
     path('search_e/', vu.search_e),
+    #ruta para ver Historial
+    path('verHistorial/<int:id>',vu.verHistorial,name='verHistorial'),
+    path('editarPerfil/<int:id>',vu.editarPerfil,name='editarPerfil'),
+    path('eliminarCuenta/<int:id>',vu.eliminarCuenta,name='eliminarCuenta'),
+    path('editarPregunta/<int:id>',vu.editarPregunta,name='editarPregunta'),
+    path('eliminarPregunta/<int:id>',vu.eliminarPregunta,name='eliminarPregunta'),
+    path('formular_p/', vu.formular_p),
+    path('Enviar_Pregunta/', vu.Enviar_Pregunta),
 ]

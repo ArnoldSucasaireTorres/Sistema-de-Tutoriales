@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" >
+  <head>
+    <meta charset="utf-8">
+    <title>Ver Historial</title>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <!--<button type="button" name="button" value="Editar Perfil" onclick="editarPerfil">Editar perfil</button>-->
+    <a href="../editarPerfil/{{currUser.id}}">Editar perfil</a>
+    {% endif %}
+    <h2>Nombre</h2>
+    <h4>{{ currUser.nombre }}</h4>
+    <h2>Correo</h2>
+    <h4>{{ currUser.correo }}</h4>
+
+    <h2>Contactalo(a)</h2>
+    <h4>{{ currUser.celular }}</h4>
+
+    <h3>-Actualmente es un usuario {{ currUser.nivel }}</h3>
+    <h3>-Se unió el {{ currUser.fecha_de_creacion }}, desde {{ currUser.pais }}</h3>
+
+    <h2>Preguntas recientes</h2>
+    {% for question in questions %}
+    <a href="../pregunta/?id={{question.id}}">{{ question.enunciado }}</a><br><a href="../eliminarPregunta/{{ question.id }}">Eliminar</a> <a href="../editarPregunta/{{ question.id }}">Editar</a><br> 
+    {% endfor %}
+
+    <h2>Actividad reciente</h2>
+    {% for answer in answers %}<!-- respuestas de usuario-->
+    <h3>Respondio a la pregunta de </h3>
+      {% for question in allQuestions %}<!-- todas las preguntas -->
+        {% if answer.pregunta_id == question.id %} <!-- si la pregunta vinculada a la respuesta es igual al id de la pregunta -->
+          {% for userThatQuestion in users %}<!-- recorremos los ususarios -->
+            {% if userThatQuestion.id == question.usuario_id%}<!-- el id del usuario debe ser el mismo del que hizo la pregunta que el usuario de este perfil contesto -->
+              <a style="color:red" href="../pregunta/?id={{question.id}}">{{ userThatQuestion.nombre }}, el dia {{ answer.fecha_de_creacion }}</a>
+            {% endif %}
+          {% endfor %}
+        {% endif%}
+      {% endfor %}
+      <h4>"{{ answer.contenido }}"<br><a href="">Eliminar</a><a href="../editarRespuesta/{{ answer.id }}">Editar</a></h4>
+      <h6>Esta es un respuesta {{answer.confiabilidad}}</h6>
+    {% endfor %}
+  </body>
+</html>

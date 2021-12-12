@@ -1,6 +1,7 @@
 <p>Preguntas</p>
 {% for pregunta in preguntas %}
-<a href="/pregunta/?id={{pregunta.id}}">{{pregunta.id}}{{pregunta.enunciado}}</a
+<span>{{forloop.counter}}</span>
+<a href="/pregunta/?id={{pregunta.id}}">{{pregunta.enunciado}}</a
 ><br />
 <span>Descripción: </span><span>{{pregunta.descripcion}}</span><br />
 <span>Tema: </span><span>{{pregunta.tema}}</span><br />

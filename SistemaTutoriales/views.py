@@ -5,7 +5,7 @@ from django.contrib import messages
 from validate_email import validate_email
 from usuarios import models as usuarios
 from datetime import datetime as dt
-from django. contrib.auth import authenticate, login
+from django. contrib.auth import authenticate, login, logout
 from django.urls import reverse
 
 
@@ -95,3 +95,10 @@ def login_user(request):
         return redirect(reverse('foro'))
 
     return render(request, 'login.html')
+
+#Nuevo logout
+def logout_user(request):
+    logout(request)
+    messages.add_message(request,messages.SUCCESS,f'Se cerró la sesión correctamente')
+    #Podria redigir al login
+    return redirect(reverse('foro'))

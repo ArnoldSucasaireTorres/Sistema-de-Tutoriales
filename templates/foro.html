@@ -9,17 +9,28 @@
 </head>
 
 <body>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     <h1>Foro de preguntas y respuestas</h1>    
-    
-{% if request.session.is_empty %}
-    <!--Botones para registrarse e iniciar sesion-->
-    <a href="/registro/"><input type="button" style="float: right;" value="Registrarse"></a>
-    <a href="/login/"><input type="button" style="float: right;" value="Iniciar Sesión"></a>
-{% else %}
-    <!-- AL desarrollar el frontend se debe mejorar esta presentacion-->
-    <a href="/logout/"><input type="button" style="float: right;" value="Logout"></a>
-    <p style="float: right;" >Bienvenido {{ user.username }} </p>
-{% endif %}
+
+    {% if request.user.is_authenticated %}
+        <!-- AL desarrollar el frontend se debe mejorar esta presentacion-->
+        <form action={% url 'logout_user' %} method="post">
+            <input type="submit" value="Cerrar Sesión">
+        </form>
+        <a href={% url 'logout_user' %}><input type="button" style="float: right;" value="Logout"></a>
+        <p style="float: right;" >Bienvenido {{ request.user.username }} </p>
+    {% else %}
+        <!--Botones para registrarse e iniciar sesion-->
+        <a href={% url 'register' %}><input type="button" style="float: right;" value="Registrarse"></a>
+        <a href={% url 'login' %}><input type="button" style="float: right;" value="Iniciar Sesión"></a>
+    {% endif %}
 
         <input id="enun" type="text" name="enun" placeholder="Enunciado">
         
@@ -41,8 +52,8 @@
         
         <label for="fname"> Fecha:</label>
         <input type="date" id ="date" name="date">
-        <button value="Buscar" id="Buscar">Buscar</button>
-
+        <button value="Buscar" id="Buscar">Buscar</button><br>
+    <a href="/formular_p/"><input type="button"  value="Formular pregunta"></a>       
     {%block cuerpo%}
     <div id="busqueda_ajax">
     {%include "busqueda.html"%}

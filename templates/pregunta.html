@@ -62,7 +62,57 @@
         ajax.send();
     }
     function editar_Respuesta(){
-        console.log(this);
+        console.log(this)
+        let editar=document.querySelectorAll(".respuesta")
+        for(let i=0;i<editar.length;i++){
+            if(editar[i].getAttribute("respuesta_id") == this.getAttribute("respuesta_id")){
+                let valor=editar[i].innerHTML;
+                editar[i].innerHTML=`
+                <textarea id="editar${editar[i].getAttribute("respuesta_id")}">${valor}</textarea>
+                <span id="guardar_cambios" respuesta_id="${editar[i].getAttribute("respuesta_id")}">Guardar Cambios</span>
+                <span id="cancelar">Cancelar</span>
+                `;
+               document.getElementById("guardar_cambios").addEventListener("click",function (){
+                    let edicion=document.getElementById("editar"+this.getAttribute("respuesta_id"))
+                    let ajax=new XMLHttpRequest();
+                    ajax.onreadystatechange=function(){
+                        if(this.readyState==4 && this.status==200){
+                            console.log(this.responseText);
+                            r_comunes();
+                        }
+                    }
+                    if(edicion.value == valor){
+                        this.parentNode.innerHTML=valor;
+                    }
+                    else if(edicion.value == ""){
+                        this.parentNode.innerHTML=valor;
+                    }
+                    else{
+                        let url=`/reRespuesta/?nuevoContenido=${edicion.value}&id=${this.getAttribute("respuesta_id")}`;
+                        console.log(url);
+                        ajax.open("GET",url,true);
+                        ajax.send();
+                    }
+                    
+               });
+               document.getElementById("cancelar").addEventListener("click",function (){
+                   this.parentNode.innerHTML=valor;
+               });
+               break;
+            }
+        }
+        
+    }
+    function guardar_cambios(){
+        let edicion=document.getElementById("editar"+this.getAttribute("respuesta_id"))
+        let ajax=new XMLHttpRequest();
+        ajax.onreadystatechange=function(){
+            if(this.readyState==4 && this.status==200){
+                console.log(this.responseText);
+            }
+        }
+        ajax.open("GET","/reRespuesta/",true);
+        ajax.send();
     }
     function aniadir_evento_boton_respuesta() {
         let respuestaB=document.getElementById("nueva_respuestaB");

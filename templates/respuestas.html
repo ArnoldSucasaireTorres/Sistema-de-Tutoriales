@@ -1,10 +1,13 @@
 
 <div id="n_respuestas" cantidad="{{respuestas|length}}">{{respuestas|length}} respuestas</div>
 {% for respuesta in respuestas %}
-    <p>{{forloop.counter}}.- {{respuesta.0}} </p>
+    <span>{{forloop.counter}}</span><p respuesta_id="{{respuesta.0.id}}"
     {%if user.username == respuesta.2.usuario%}
+    class="respuesta">{{respuesta.0}}</p>
     <span respuesta_id="{{respuesta.0.id}}" class="eliminar" style="cursor: pointer">Eliminar</span><br>
     <span respuesta_id="{{respuesta.0.id}}" class="editar" style="cursor: pointer">editar</span>
+    {%else%}
+    >{{respuesta.0}} </p>
     {%endif%}
     {%load static %}
     <table>
