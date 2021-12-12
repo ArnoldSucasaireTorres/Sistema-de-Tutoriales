@@ -7,6 +7,9 @@ from usuarios import models as usuarios
 from datetime import datetime as dt
 from django. contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from .decorators import auth_user_should_not_access
+from cryptography.fernet import Fernet
 
 
 def hola(request):
@@ -17,6 +20,7 @@ def index(request):
     return render(request, "index.html",{})
 
 #Nuevo Registro 
+@auth_user_should_not_access
 def register(request):
     if request.method == 'POST':
         context = {'has_error': False, 'data': request.POST}
@@ -78,6 +82,7 @@ def register(request):
 
 #Nuevo Login
 #se cambia a login_user para distinguirlo del login importado
+@auth_user_should_not_access
 def login_user(request):
     if request.method == 'POST':
         context = {'data': request.POST}
@@ -89,10 +94,13 @@ def login_user(request):
         if not user:
             messages.add_message(request,messages.ERROR,'Datos erróneos')
             return render(request, 'login.html', context)
-        
+        #retornar a la misma pagina luego de hacer el login
         login(request, user)
         messages.add_message(request,messages.SUCCESS,f'Bienvenido {user.username}')
-        return redirect(reverse('foro'))
+        if 'next' in request.POST:
+            return redirect(request.POST.get('next'))
+        else:
+            return redirect(reverse('foro'))
 
     return render(request, 'login.html')
 
@@ -100,5 +108,5 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     messages.add_message(request,messages.SUCCESS,f'Se cerró la sesión correctamente')
-    #Podria redigir al login
+    #Podria redigir al login 
     return redirect(reverse('foro'))

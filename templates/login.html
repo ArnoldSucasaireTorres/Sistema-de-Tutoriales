@@ -17,6 +17,10 @@
     <!--Formulario del Login-->
     <form action="" class="form" method="post" action={% url 'login' %}>
         {% csrf_token %}
+        <!-- redireccion de foro -->
+        {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{request.GET.next}}">
+        {% endif %}
         <p>
             <label for="">Nombre de Usuario: </label>
             <input type="text" required name="username" value="{{ data.username }}">

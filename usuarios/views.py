@@ -4,9 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 #Formularios para en registro en django
 from datetime import datetime as dt
 from django.contrib import messages
-from .forms import UserRegisterForm
 from django.contrib.auth.models import auth
-
+from django.contrib.auth.decorators import login_required
 
 from django.urls import reverse
 
@@ -66,6 +65,7 @@ def pregunta(request):
         num_com_por_resp.append([r,len(com),usuario])
 
     return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas,"id_pregunta":request.GET.get("id","")})
+
 
 def comentario(request):
     respuesta_id=request.GET.get("id_respuesta","")
@@ -152,40 +152,6 @@ def calificacion(request):
             return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
     
     return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
-
-
-def registro(request):
-    #Hacemos un if para verificar si los campos fueron llenados
-    if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            #Adeemas de guardar en el Auth User de Django, se
-            # guarda tambien en Usuarios_usuario
-            nombre_usuario = form.cleaned_data['username']
-            email_usuario = form.cleaned_data['email']
-            nombre_apellidos_usuario = form.cleaned_data['first_name'] +" "+ form.cleaned_data['last_name']
-            contrasenia_usuario = form.cleaned_data['password1']
-            #Se obtiene la fecha y hora actual
-            ahora = dt.now()
-            fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
-
-            usuario_en_creacion = usuarios.Usuario(
-                nombre = nombre_apellidos_usuario,
-                usuario = nombre_usuario,
-                correo = email_usuario,
-                contrasenia = contrasenia_usuario,
-                fecha_de_creacion = fecha,
-                fecha_de_modificacion = fecha,
-                estado=True)
-            usuario_en_creacion.save()
-            #messages.success(request, f'Usuario {nombre_apellidos_usuario} creado')
-            #messages.success(request, f'Usuario {username} creado')
-            return redirect('foro')
-    else:
-        form = UserRegisterForm()
-    context = { 'form' : form}
-    return render(request, 'registro.html', context)
 
 #buscar
 def search_e(request):
@@ -319,6 +285,7 @@ def eliminarPregunta(request, id):
     print("Se elimino la pregunta")
     return render(request,"index.html",{})
 #agregarpregunta
+@login_required()
 def formular_p(request):
     temas = list(usuarios.Tema.objects.all())
     areas = list(usuarios.Area.objects.all())

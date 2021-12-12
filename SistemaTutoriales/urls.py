@@ -37,6 +37,8 @@ urlpatterns = [
     path('foro/', vu.foro, name='foro'),
     #ruta para el registro, login y logout
     path('login', vw.login_user, name='login'),
+    path('auth/login/', vw.login_user, name='login'),
+    path('accounts/login/', vw.login_user, name='login'),
     path('register', vw.register, name='register'),
     path('logout_user', vw.logout_user, name='logout_user'),
     #ruta del search

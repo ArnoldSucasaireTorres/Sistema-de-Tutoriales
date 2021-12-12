@@ -22,9 +22,9 @@
     {% if request.user.is_authenticated %}
         <!-- AL desarrollar el frontend se debe mejorar esta presentacion-->
         <form action={% url 'logout_user' %} method="post">
-            <input type="submit" value="Cerrar Sesión">
+            {% csrf_token %}
+            <input type="submit" style="float: right;" value="Cerrar Sesión">
         </form>
-        <a href={% url 'logout_user' %}><input type="button" style="float: right;" value="Logout"></a>
         <p style="float: right;" >Bienvenido {{ request.user.username }} </p>
     {% else %}
         <!--Botones para registrarse e iniciar sesion-->
