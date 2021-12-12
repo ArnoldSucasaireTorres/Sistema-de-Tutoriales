@@ -5,7 +5,9 @@ from django.contrib import messages
 from validate_email import validate_email
 from usuarios import models as usuarios
 from datetime import datetime as dt
-#from .models import usuarios
+from django. contrib.auth import authenticate, login
+from django.urls import reverse
+
 
 def hola(request):
     return HttpResponse("Hola mundo")
@@ -75,5 +77,21 @@ def register(request):
     return render(request, 'register.html')
 
 #Nuevo Login
-def login(request):
+#se cambia a login_user para distinguirlo del login importado
+def login_user(request):
+    if request.method == 'POST':
+        context = {'data': request.POST}
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if not user:
+            messages.add_message(request,messages.ERROR,'Datos erróneos')
+            return render(request, 'login.html', context)
+        
+        login(request, user)
+        messages.add_message(request,messages.SUCCESS,f'Bienvenido {user.username}')
+        return redirect(reverse('foro'))
+
     return render(request, 'login.html')

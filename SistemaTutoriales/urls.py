@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^eRespuesta/$',vu.eliminar_respuesta),
     path('foro/', vu.foro, name='foro'),
     #ruta para el registro, login y logout
-    path('login', vw.login, name='login'),
+    path('login', vw.login_user, name='login'),
     path('register', vw.register, name='register'),
     #ruta del search
     path('search_e/', vu.search_e),
