@@ -23,7 +23,7 @@
 
     <h2>Preguntas recientes</h2>
     {% for question in questions %}
-    <a href="../pregunta/?id={{question.id}}">{{ question.enunciado }}</a><br><a href="../eliminarPregunta/{{ question.id }}">Eliminar</a> <a href="../editarPregunta/{{ question.id }}">Editar</a><br> 
+    <a href="../pregunta/?id={{question.id}}">{{ question.enunciado }}</a><br><a href="../eliminarPregunta/{{ question.id }}">Eliminar</a><br> 
     {% endfor %}
 
     <h2>Actividad reciente</h2>
@@ -38,7 +38,7 @@
           {% endfor %}
         {% endif%}
       {% endfor %}
-      <h4>"{{ answer.contenido }}"<br><a href="">Eliminar</a><a href="../editarRespuesta/{{ answer.id }}">Editar</a></h4>
+      <h4>"{{ answer.contenido }}"<br><a href="../eliminarRespuesta/{{ answer.id }}">Eliminar Respuesta ...</a></h4>
       <h6>Esta es un respuesta {{answer.confiabilidad}}</h6>
     {% endfor %}
   </body>

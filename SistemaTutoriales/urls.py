@@ -47,8 +47,9 @@ urlpatterns = [
     path('verHistorial/<int:id>',vu.verHistorial,name='verHistorial'),
     path('editarPerfil/<int:id>',vu.editarPerfil,name='editarPerfil'),
     path('eliminarCuenta/<int:id>',vu.eliminarCuenta,name='eliminarCuenta'),
-    path('editarPregunta/<int:id>',vu.editarPregunta,name='editarPregunta'),
     path('eliminarPregunta/<int:id>',vu.eliminarPregunta,name='eliminarPregunta'),
+    path('eliminarRespuesta/<int:id>',vu.eliminarRespuesta,name='eliminarRespuesta'),
+    #fin de mis url's
     path('formular_p/', vu.formular_p),
     path('Enviar_Pregunta/', vu.Enviar_Pregunta),
 ]

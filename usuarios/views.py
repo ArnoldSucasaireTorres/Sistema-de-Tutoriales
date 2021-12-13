@@ -206,7 +206,6 @@ def verHistorial(request, id):
     allUsers=usuarios.Usuario.objects.all()
     allQuestions=usuarios.Pregunta.objects.all()
     allAnswers=usuarios.Respuesta.objects.all()
-
     userQuestions=usuarios.Pregunta.objects.filter(usuario=id)
     userAnswers=usuarios.Respuesta.objects.filter(usuario=id)
     currUser=usuarios.Usuario.objects.get(id=id)
@@ -214,7 +213,7 @@ def verHistorial(request, id):
     currUser=auth.authenticate(username=currUser.usuario,password=currUser.contrasenia)
     auth.login(request,currUser)
     currUser=usuarios.Usuario.objects.get(id=id)
-    return render(request, "verHistorial.html", {'currUser': currUser, 'questions': userQuestions, 'answers': userAnswers ,'allQuestions' : allQuestions, 'allAnswers':allAnswers, 'users':allUsers } )
+    return render(request, "verHistorial.html", {'currUser': currUser, 'questions': userQuestions, 'answers': userAnswers ,'allQuestions' : allQuestions, 'allAnswers':allAnswers, 'users':allUsers })
 
 def editarPerfil(request, id):
     if request.method=='POST':
@@ -265,25 +264,20 @@ def eliminarCuenta(request, id):
     else:
         return render(request,"editarPerfil.html",{})
 
-def editarPregunta(request, id):
-    if request.method == 'POST':
-        newSentence=request.POST['nPregunta']
-        selQuestion=usuarios.Pregunta.objects.get(id=id)
-        selQuestion.enunciado = newSentence
-        selQuestion.save()
-        print("Se modifico la pregunta")
-        return render(request,"index.html",{})
-        #return reverse('verHistorial',{})
-    else:
-        selQuestion = usuarios.Pregunta.objects.get(id=id)
-        return render(request,"editPregunta.html",{'selQuestion': selQuestion})
-
 def eliminarPregunta(request, id):
     selQuestion=usuarios.Pregunta.objects.get(id=id)
-    selQuestion.estado = False
-    selQuestion.save()
+    selQuestion.delete()
     print("Se elimino la pregunta")
     return render(request,"index.html",{})
+
+def eliminarRespuesta(request, id):
+    selQuestion=usuarios.Respuesta.objects.get(id=id)
+    selQuestion.delete()
+    print("Se elimino la respuesta")
+    return render(request,"index.html",{})
+
+#Fin de mis vistas
+
 #agregarpregunta
 @login_required()
 def formular_p(request):

@@ -25,7 +25,7 @@
             {% csrf_token %}
             <input type="submit" style="float: right;" value="Cerrar Sesión">
         </form>
-        <p style="float: right;" >Bienvenido {{ request.user.username }} </p>
+        <p style="float: right;" >Bienvenido <a href="../verHistorial/{{request.user.id}}">{{ request.user.username }}</a> </p>
     {% else %}
         <!--Botones para registrarse e iniciar sesion-->
         <a href={% url 'register' %}><input type="button" style="float: right;" value="Registrarse"></a>
