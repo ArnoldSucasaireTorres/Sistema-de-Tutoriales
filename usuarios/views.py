@@ -93,7 +93,7 @@ def calificacion(request):
         if usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal).exists():
             
             califi=list(usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal))[0]
-            print(califi.estado)
+            
             if (califi.estado == True):
                 respuesta.num_buena_calificacion=respuesta.num_buena_calificacion-1
                 respuesta.save()
@@ -104,7 +104,7 @@ def calificacion(request):
                 respuesta.num_mala_calificacion=respuesta.num_mala_calificacion-1
                 respuesta.save()
                 califi.save()
-        
+         
         else:
             ahora = dt.now()
             fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
@@ -117,8 +117,11 @@ def calificacion(request):
             )
             califi.save()
             respuesta.num_buena_calificacion=respuesta.num_buena_calificacion+1
-            respuesta.save()
-            return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
+            respuesta.save() 
+        
+        sistemaDeNivel(request, respuesta)
+
+        return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
 
     elif request.GET.get("dislike",""):
         if usuarios.Calificacion.objects.filter(usuario_id=usuario.id,respuesta_id=cal).exists():
@@ -149,9 +152,65 @@ def calificacion(request):
             califi.save()
             respuesta.num_mala_calificacion=respuesta.num_mala_calificacion+1
             respuesta.save()
-            return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
+        
+        sistemaDeNivel(request, respuesta)
+                    
+        return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
     
     return HttpResponse('{"likes":'+str(respuesta.num_buena_calificacion)+',"dislikes":'+str(respuesta.num_mala_calificacion)+'}')
+
+def sistemaDeNivel(request,respuesta):
+    diferencia=respuesta.num_buena_calificacion - respuesta.num_mala_calificacion
+    if (diferencia >= 2):
+        if(respuesta.confiabilidad_id != 2):
+            respuesta.confiabilidad_id=2
+            #usuario de la respuesta
+            u_d_l_r=usuarios.Usuario.objects.get(id=respuesta.usuario_id)
+            temp=u_d_l_r.num_resp_confiables if u_d_l_r.num_resp_confiables else 0
+            u_d_l_r.num_resp_confiables=temp+1
+            respuesta.save()
+            u_d_l_r.save()
+            #verifica la cantidad de resp_confiables que tiene el usuario para subir de nivel
+            if( 0<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=4 ):
+                u_d_l_r.nivel_id=2
+                u_d_l_r.save()
+            elif ( 5<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=9 ):
+                u_d_l_r.nivel_id=2
+                u_d_l_r.save()
+            elif ( 10<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=19 ):
+                u_d_l_r.nivel_id=3
+                u_d_l_r.save()
+            elif ( 20<=u_d_l_r.num_resp_confiables):
+                u_d_l_r.nivel_id=3
+                u_d_l_r.save()
+            else:
+                u_d_l_r.nivel_id=1
+                u_d_l_r.save()
+
+    else:
+        if(respuesta.confiabilidad_id != 1):
+            respuesta.confiabilidad_id=1
+            #usuario de la respuesta
+            u_d_l_r=usuarios.Usuario.objects.get(id=respuesta.usuario_id)
+            u_d_l_r.num_resp_confiables=(u_d_l_r.num_resp_confiables if u_d_l_r.num_resp_confiables else 1)-1
+            respuesta.save()
+            u_d_l_r.save()
+            if( 0<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=4 ):
+                u_d_l_r.nivel_id=1
+                u_d_l_r.save()
+            elif ( 5<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=9 ):
+                u_d_l_r.nivel_id=2
+                u_d_l_r.save()
+            elif ( 10<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=19 ):
+                u_d_l_r.nivel_id=3
+                u_d_l_r.save()
+            elif ( 20<=u_d_l_r.num_resp_confiables):
+                u_d_l_r.nivel_id=3
+                u_d_l_r.save()
+            else:
+                u_d_l_r.nivel_id=1
+                u_d_l_r.save()
+    return ""
 
 #buscar
 def search_e(request):

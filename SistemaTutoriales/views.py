@@ -9,7 +9,7 @@ from django. contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .decorators import auth_user_should_not_access
-from cryptography.fernet import Fernet
+from django.contrib.auth.models import User
 
 
 def hola(request):
@@ -73,8 +73,15 @@ def register(request):
                 fecha_de_creacion = fecha,
                 fecha_de_modificacion = fecha,
                 #faltaria el nivel
+                nivel_id=1,
+                num_resp_confiables=0,
                 estado=True)
         user.save()
+        #Se guarda tambien en la tabla auth_user
+        user2 = User.objects.create_user(username=username, email=email)
+        user2.set_password(password)
+        user2.save()
+
         messages.add_message(request, messages.SUCCESS, 
             'La cuenta ha sido creada, ya puede iniciar sesion')
         return redirect('login')

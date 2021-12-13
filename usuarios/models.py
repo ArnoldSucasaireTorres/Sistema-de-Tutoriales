@@ -42,6 +42,7 @@ class Usuario(models.Model):
     pais = models.CharField(max_length = 50, null = True)
     fecha_de_nacimiento = models.DateTimeField(blank = True, null = True)
     nivel = models.ForeignKey (Nivel, on_delete = models.CASCADE, null = True)
+    num_resp_confiables=models.IntegerField(null=True)
     fecha_de_creacion = models.DateTimeField(blank = True, null = True)
     fecha_de_modificacion = models.DateTimeField(blank = True, null = True)
     estado = models.BooleanField(null = True)
