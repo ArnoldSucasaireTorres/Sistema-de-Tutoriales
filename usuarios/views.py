@@ -397,7 +397,8 @@ def eliminarCuenta(request, id):
 @login_required
 def eliminarPregunta(request, id):
     selQuestion=usuarios.Pregunta.objects.get(id=id)
-    if(selQuestion.usuario_id == request.user.id) :
+    currUser=usuarios.Usuario.objects.get(usuario=request.user.username)
+    if(selQuestion.usuario_id == currUser.id) :
         selQuestion.delete()
         print("Se elimino la pregunta")
         messages.info(request,'Eliminaste la pregunta')

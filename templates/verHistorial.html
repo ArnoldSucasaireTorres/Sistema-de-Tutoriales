@@ -31,7 +31,7 @@
     <h3>Respondiste a la pregunta:  </h3>
       {% for someQuestion in allQuestions %}
         {% if someQuestion.id == answer.pregunta_id %}
-        <a style="color:red" href="../pregunta/?id={{question.id}}">{{ someQuestion.enunciado }}</a>
+        <a style="color:red" href="../pregunta/?id={{ someQuestion.id }}">{{ someQuestion.enunciado }}</a>
         {% endif%}
       {% endfor %}
       {% if answer.confiabilidad == "normal" %}
