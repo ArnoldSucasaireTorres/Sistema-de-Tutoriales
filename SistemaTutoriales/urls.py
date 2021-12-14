@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^aSubComentario/$',vu.aniadir_comentario_a_comentario),
     url(r'^eComentario/$',vu.eliminar_comentario),
     url(r'^reComentario/$',vu.editar_comentario),
+    url(r'^ePregunta/$',vu.eliminar_pregunta),
     path('foro/', vu.foro, name='foro'),
     #ruta para el registro, login y logout
     path('login/', vw.login_user, name='login'),

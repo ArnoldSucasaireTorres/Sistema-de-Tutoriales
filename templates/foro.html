@@ -61,7 +61,7 @@
     {%endblock%}
    
 <script>
-let Buscar=document.getElementById("Buscar");
+    let Buscar=document.getElementById("Buscar");
     Buscar.addEventListener("click",buscar);
     function buscar() {
         //peticion xmlhttprequest general
@@ -91,6 +91,28 @@ let Buscar=document.getElementById("Buscar");
         }
         console.log(url);
         ajax.open("GET", url, true);
+        ajax.send();
+    }
+
+    aniadir_evento_a_eliminar_pregunta();
+
+    function aniadir_evento_a_eliminar_pregunta(){
+        let eliminarPreg = document.querySelectorAll(".eliminarPreg");
+        for(let i=0;i<eliminarPreg.length;i++){
+            let elimP=eliminarPreg[i].addEventListener("click",eliminar_pregunta);
+        }
+    }
+    function eliminar_pregunta(){
+        let objeto=this;
+        let ajax=new XMLHttpRequest();
+        ajax.onreadystatechange=function (){
+            if(this.readyState==4 && this.status == 200){
+                console.log(this.responseText);
+                location.reload();
+            }
+        }
+        url="pregunta_id="+objeto.getAttribute("pregunta_id");
+        ajax.open('GET',"/ePregunta/?"+url,true)
         ajax.send();
     }
 </script>

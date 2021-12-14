@@ -21,7 +21,12 @@ def foro(request):
     preguntas = list(usuarios.Pregunta.objects.all())
     temas = list(usuarios.Tema.objects.all())
     areas = list(usuarios.Area.objects.all())
-    return render(request,'foro.html',{"preguntas": preguntas,"temas":temas,"areas":areas})
+    pregunta_usuario=[]
+    for pregunta in preguntas:
+        usuario=usuarios.Usuario.objects.get(id=pregunta.usuario_id)
+        pregunta_usuario.append([pregunta,usuario])
+
+    return render(request,'foro.html',{"preguntas": pregunta_usuario,"temas":temas,"areas":areas})
 
 def pregunta(request):
     #recibimos el id de la pregunta seleccionada en foro
@@ -478,5 +483,9 @@ def editar_comentario(request):
     comentario_id=request.GET.get("id","")
     contenido=request.GET.get("nuevoContenido","")
     respuesta=usuarios.Comentario.objects.filter(id=int(comentario_id)).update(contenido=contenido)
-    
     return HttpResponse("Exito")
+
+def eliminar_pregunta(request):
+    pregunta_id=request.GET.get("pregunta_id","")
+    pregunta_eliminada=usuarios.Pregunta.objects.get(id=pregunta_id).delete()
+    return HttpResponse(pregunta_id)
