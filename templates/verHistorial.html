@@ -27,19 +27,19 @@
     {% endfor %}
 
     <h2>Actividad reciente</h2>
-    {% for answer in answers %}<!-- respuestas de usuario-->
-    <h3>Respondio a la pregunta de </h3>
-      {% for question in allQuestions %}<!-- todas las preguntas -->
-        {% if .preguntaanswer_id == question.id %} <!-- si la pregunta vinculada a la respuesta es igual al id de la pregunta -->
-          {% for userThatQuestion in users %}<!-- recorremos los usuarios -->
-            <!--{% if userThatQuestion.id == question.usuario_id%}--><!-- el id del usuario debe ser el mismo del que hizo la pregunta que el usuario de este perfil contesto -->
-              <a style="color:red" href="../pregunta/?id={{question.id}}">{{ userThatQuestion.nombre }}, el dia {{ answer.fecha_de_creacion }}</a>
-            <!--{% endif %}-->
-          {% endfor %}
+    {% for answer in resFiltradas %}<!-- respuestas de usuario-->
+    <h3>Respondiste a la pregunta:  </h3>
+      {% for someQuestion in allQuestions %}
+        {% if someQuestion.id == answer.pregunta_id %}
+        <a style="color:red" href="../pregunta/?id={{question.id}}">{{ someQuestion.enunciado }}</a>
         {% endif%}
       {% endfor %}
-      <h4>"{{ answer.contenido }}"<br><a href="../eliminarRespuesta/{{ answer.id }}">Eliminar Respuesta ...</a></h4>
-      <h6>Esta es un respuesta {{answer.confiabilidad}}</h6>
+      {% if answer.confiabilidad == "normal" %}
+        <h4 style="color:blue">"{{ answer.contenido }}"</h4><br><a href="../eliminarRespuesta/{{ answer.id }}">Eliminar Respuesta ...</a>
+      {% else %}
+        <h4 style="color:brown">"{{ answer.contenido }}"</h4><br><a href="../eliminarRespuesta/{{ answer.id }}">Eliminar Respuesta ...</a>
+      {% endif %}
+      <!--<h6>Esta es un respuesta {{answer.confiabilidad}}</h6>-->
     {% endfor %}
   </body>
 </html>

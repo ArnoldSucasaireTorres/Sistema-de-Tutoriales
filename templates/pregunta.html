@@ -13,6 +13,7 @@
     calificacion();
     aniadir_evento_boton_respuesta();
     aniadir_evento_comentar_respuesta();
+    aniadir_evento_boton_comentario();
     let resp_normal = document.getElementById("resp_normal");
     resp_normal.addEventListener('click', r_comunes);
     function r_comunes() {
@@ -38,6 +39,75 @@
         }
         ajax.send();
     }
+    function aniadir_evento_eliminar_edita_comentarior(){
+        let eliminar =document.querySelectorAll(".eliminarC");
+        let editar =document.querySelectorAll(".editarC");
+        for (let i = 0; i < eliminar.length; i++) {
+            let elim = eliminar[i];
+            elim.addEventListener('click', eliminar_Comentario);
+            let edit = editar[i];
+            edit.addEventListener('click', editar_Comentario);
+            //let comentar = document.getElementById("comentar" + i);
+            //comentar.addEventListener('click', add_comentar);
+        }
+    }
+    function eliminar_Comentario(){
+        let objeto=this;
+        let ajax=new XMLHttpRequest();
+        ajax.onreadystatechange=function (){
+            if(this.readyState==4 && this.status == 200){
+                console.log(this.responseText);
+                r_comunes();
+            }
+        }
+        url="comentario_id="+objeto.getAttribute("comentario_id");
+        ajax.open('GET',"/eComentario/?"+url,true)
+        ajax.send();
+        
+    }
+    function editar_Comentario(){
+        console.log(this)
+        let editar=document.querySelectorAll(".comentario")
+        for(let i=0;i<editar.length;i++){
+            if(editar[i].getAttribute("comentario_id") == this.getAttribute("comentario_id")){
+                let valor=editar[i].innerHTML;
+                editar[i].innerHTML=`
+                <textarea id="editar${editar[i].getAttribute("comentario_id")}">${valor}</textarea>
+                <span id="guardar_cambios${editar[i].getAttribute("comentario_id")}" comentario_id="${editar[i].getAttribute("comentario_id")}">Guardar Cambios</span>
+                <span id="cancelar${editar[i].getAttribute("comentario_id")}">Cancelar</span>
+                `;
+               document.getElementById("guardar_cambios"+editar[i].getAttribute("comentario_id")).addEventListener("click",function (){
+                    let edicion=document.getElementById("editar"+this.getAttribute("comentario_id"))
+                    let ajax=new XMLHttpRequest();
+                    ajax.onreadystatechange=function(){
+                        if(this.readyState==4 && this.status==200){
+                            console.log(this.responseText);
+                            r_comunes();
+                        }
+                    }
+                    if(edicion.value == valor){
+                        this.parentNode.innerHTML=valor;
+                    }
+                    else if(edicion.value == ""){
+                        this.parentNode.innerHTML=valor;
+                    }
+                    else{
+                        let url=`/reComentario/?nuevoContenido=${edicion.value}&id=${this.getAttribute("comentario_id")}`;
+                        console.log(url);
+                        ajax.open("GET",url,true);
+                        ajax.send();
+                    }
+                    
+               });
+               document.getElementById("cancelar"+editar[i].getAttribute("comentario_id")).addEventListener("click",function (){
+                   this.parentNode.innerHTML=valor;
+               });
+               break;
+            }
+        }
+        
+    }
+    //-------------
     function aniadir_evento_comentar_respuesta(){
         let comentarRespuesta=document.querySelectorAll(".comentarRespuesta");
         for(let i=0; i<comentarRespuesta.length; i++){
@@ -46,22 +116,80 @@
     }
     function add_comentar_respuesta(){
         console.log(this);
-        let ajax=new XMLHttpRequest();
-        ajax.onreadystatechange=function(){
-            if(this.readyState==4 && this.status==200){
-                console.log(this.responseText);
-            }
-        }
-        let url;
         if(this.getAttribute("id_respuesta")){
             console.log("este es un comentario a respuesta");
-            url="aComentario/?usuario={{user.username}}&id_respuesta="+this.getAttribute("id_respuesta");
+            url="/aComentario/?usuario={{user.username}}&id_respuesta="+this.getAttribute("id_respuesta");
             console.log(url);
+            let eActual=this;
+            this.parentNode.innerHTML=`
+            <textarea respuesta="${this.getAttribute("id_respuesta")}" id="com_resp${this.getAttribute("id_respuesta")}"></textarea>
+            <span id="g_c${this.getAttribute("id_respuesta")}">Guardar Comentario</span>
+            <span id="c${this.getAttribute("id_respuesta")}">Cancelar</span>
+            `;
+            document.getElementById("g_c"+this.getAttribute("id_respuesta")).addEventListener("click",function (){
+                    let edicion=document.getElementById("com_resp"+eActual.getAttribute("id_respuesta"))
+                    console.log(edicion.value);
+                    
+                    let ajax=new XMLHttpRequest();
+                    ajax.onreadystatechange=function(){
+                        if(this.readyState==4 && this.status==200){
+                            console.log(this.responseText);
+                            r_comunes();
+                        }
+                    }
+                    if(edicion.value == ""){
+                        console.log("no hay nada");
+                    }
+                    else{
+                        let url=`/aComentario/?nuevoComentario=${edicion.value}&id=${eActual.getAttribute("id_respuesta")}&usuario={{user.username}}`;
+                        console.log(url);
+                        ajax.open("GET",url,true);
+                        ajax.send();
+                    }
+                    
+               });
+               document.getElementById("c"+this.getAttribute("id_respuesta")).addEventListener("click",function (){
+                   this.parentNode.innerHTML=eActual.outerHTML;
+                   aniadir_evento_comentar_respuesta();
+               });
         }
         else{
             console.log("este es un comentario a subcomentario");
-            url=this.getAttribute("id_comentario");
+            console.log("este es un comentario a respuesta");
+            url="/aComentario/?usuario={{user.username}}&id_respuesta="+this.getAttribute("id_comentario");
             console.log(url);
+            let eActual=this;
+            this.parentNode.innerHTML=`
+            <textarea respuesta="${this.getAttribute("id_comentario")}" id="com_com${this.getAttribute("id_comentario")}"></textarea>
+            <span id="g_c${this.getAttribute("id_comentario")}">Guardar Comentario</span>
+            <span id="c${this.getAttribute("id_comentario")}">Cancelar</span>
+            `;
+            document.getElementById("g_c"+this.getAttribute("id_comentario")).addEventListener("click",function (){
+                    let edicion=document.getElementById("com_com"+eActual.getAttribute("id_comentario"))
+                    console.log(edicion.value);
+                    
+                    let ajax=new XMLHttpRequest();
+                    ajax.onreadystatechange=function(){
+                        if(this.readyState==4 && this.status==200){
+                            console.log(this.responseText);
+                            r_comunes();
+                        }
+                    }
+                    if(edicion.value == ""){
+                        console.log("no hay nada");
+                    }
+                    else{
+                        let url=`/aSubComentario/?nuevoSubComentario=${edicion.value}&id=${eActual.getAttribute("id_comentario")}&usuario={{user.username}}`;
+                        console.log(url);
+                        ajax.open("GET",url,true);
+                        ajax.send();
+                    }
+                    
+               });
+               document.getElementById("c"+this.getAttribute("id_comentario")).addEventListener("click",function (){
+                   this.parentNode.innerHTML=eActual.outerHTML;
+                   aniadir_evento_comentar_respuesta();
+               });
         }
     }
     function aniadir_evento_eliminar_editar(){
@@ -97,10 +225,10 @@
                 let valor=editar[i].innerHTML;
                 editar[i].innerHTML=`
                 <textarea id="editar${editar[i].getAttribute("respuesta_id")}">${valor}</textarea>
-                <span id="guardar_cambios" respuesta_id="${editar[i].getAttribute("respuesta_id")}">Guardar Cambios</span>
-                <span id="cancelar">Cancelar</span>
+                <span id="guardar_cambios${editar[i].getAttribute("respuesta_id")}" respuesta_id="${editar[i].getAttribute("respuesta_id")}">Guardar Cambios</span>
+                <span id="cancelar${editar[i].getAttribute("respuesta_id")}">Cancelar</span>
                 `;
-               document.getElementById("guardar_cambios").addEventListener("click",function (){
+               document.getElementById("guardar_cambios"+editar[i].getAttribute("respuesta_id")).addEventListener("click",function (){
                     let edicion=document.getElementById("editar"+this.getAttribute("respuesta_id"))
                     let ajax=new XMLHttpRequest();
                     ajax.onreadystatechange=function(){
@@ -123,7 +251,7 @@
                     }
                     
                });
-               document.getElementById("cancelar").addEventListener("click",function (){
+               document.getElementById("cancelar"+editar[i].getAttribute("respuesta_id")).addEventListener("click",function (){
                    this.parentNode.innerHTML=valor;
                });
                break;
@@ -229,6 +357,7 @@
                 document.getElementById(boton).innerHTML = this.responseText;
                 aniadir_evento_boton_subcomentario();
                 aniadir_evento_comentar_respuesta();
+                aniadir_evento_eliminar_edita_comentarior();
             }
         }
         let url="/comentario/?id_respuesta="+this.getAttribute("id_respuesta");
@@ -250,6 +379,7 @@
                 document.getElementById(boton).innerHTML = this.responseText;
                 aniadir_evento_boton_subcomentario();
                 aniadir_evento_comentar_respuesta();
+                aniadir_evento_eliminar_edita_comentarior()
             }
         }
         let url="/comentario/?id_comentario="+this.getAttribute("id_comentario");

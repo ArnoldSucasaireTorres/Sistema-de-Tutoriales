@@ -1,9 +1,17 @@
 <p>Comentarios:</p>
 {%for comentario in comentarios%}
-<p>{{comentario.0.contenido}}</p>
+<span>{{forloop.counter}}</span><p comentario_id="{{comentario.0.id}}"
+    {%if user.username == comentario.2.usuario%}
+    class="comentario">{{comentario.0.contenido}}</p>
+    <span comentario_id="{{comentario.0.id}}" class="eliminarC" style="cursor: pointer">Eliminar</span><br>
+    <span comentario_id="{{comentario.0.id}}" class="editarC" style="cursor: pointer">editar</span>
+    {%else%}
+    >{{respuesta.0}} </p>
+    {%endif%}
+
 {%if user.username %}
-    <span class="comentarRespuesta" 
-        style="color:blue; cursor:pointer" id_comentario="{{comentario.0.id}}">Comentar</span><br />
+    <span><span class="comentarRespuesta" 
+        style="color:blue; cursor:pointer" id_comentario="{{comentario.0.id}}">Comentar</span></span><br />
 {%endif%}
 {%if comentario.1%}
     <p>{{comentario.1}} comentarios</p>

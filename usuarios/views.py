@@ -82,7 +82,8 @@ def comentario(request):
 
     for comentario in comentarios:
         com= list(usuarios.Comentario.objects.filter(comentario_id=comentario.id))
-        num_scom_com.append([comentario,len(com)])
+        usuario = usuarios.Usuario.objects.get(id=comentario.usuario_id)
+        num_scom_com.append([comentario,len(com),usuario])
     return render(request,'comentario.html',{"comentarios":num_scom_com})
 
 #likes y dislikes
@@ -280,8 +281,17 @@ def verHistorial(request, id):
         print(userQuestions)
         userAnswers=usuarios.Respuesta.objects.filter(usuario_id = falseUser.id)
 
-        respuestasFiltradas=usuarios.Respuesta.objects.filter(usuario_id=falseUser.id)
-        print(respuestasFiltradas)
+        resFiltradas=usuarios.Respuesta.objects.filter(usuario_id=falseUser.id)
+        #print(respuestasFiltradas)
+        """
+        for falAnswer in respuestasFiltradas :
+            for someQuestion in allQuestions :
+                if someQuestion.id == falAnswer.pregunta_id :
+                    print(someQuestion.enunciado)
+                    print(someQuestion.usuario)
+                    print("Esta es una pregunta")"""
+
+
         """print(request.user.username)
         print(falseUser.usuario)
         print("Hasta aqui")"""
@@ -291,7 +301,7 @@ def verHistorial(request, id):
         currUser=auth.authenticate(username=currUser.usuario,password=currUser.contrasenia)
         auth.login(request,currUser)
         currUser=usuarios.Usuario.objects.get(id=id)"""
-        return render(request, "verHistorial.html", {'currUser': falseUser, 'questions': userQuestions, 'answers': userAnswers ,'allQuestions' : allQuestions, 'allAnswers':allAnswers, 'users':allUsers })
+        return render(request, "verHistorial.html", {'resFiltradas': resFiltradas ,'currUser': falseUser, 'questions': userQuestions, 'answers': userAnswers ,'allQuestions' : allQuestions, 'allAnswers':allAnswers, 'users':allUsers })
     else:
         messages.info(request,'Usted no esta autorizado a ver este perfil o este perfil ya no existe')
         return redirect(reverse('foro'))
@@ -423,3 +433,50 @@ def Enviar_Pregunta(request):
     preguntas = list(usuarios.Pregunta.objects.all())
     #return render(request, 'foro.html',{"preguntas":preguntas})   
     return redirect('../foro/',{"preguntas":preguntas})  
+
+
+def aniadir_comentario_a_respuesta(request):
+    usuario_id=usuarios.Usuario.objects.get(usuario=request.GET.get("usuario","")).id
+    ahora = dt.now()
+    fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+    comentarioNuevo=usuarios.Comentario(
+        contenido=request.GET.get("nuevoComentario",""),
+        fecha_de_creacion=fecha,
+        fecha_de_modificacion=fecha,
+        estado=1,
+        respuesta_id=int(request.GET.get("id","")),
+        usuario_id=usuario_id,
+    )
+    comentarioNuevo.save()
+    return HttpResponse("exito")
+
+def aniadir_comentario_a_comentario(request):
+    respuesta_id=usuarios.Comentario.objects.get(id=int(request.GET.get("id",""))).respuesta_id
+    usuario_id=usuarios.Usuario.objects.get(usuario=request.GET.get("usuario","")).id
+    ahora = dt.now()
+    fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+    comentarioNuevo=usuarios.Comentario(
+        contenido=request.GET.get("nuevoSubComentario",""),
+        comentario_id=int(request.GET.get("id","")),
+        fecha_de_creacion=fecha,
+        fecha_de_modificacion=fecha,
+        estado=1,
+        respuesta_id=respuesta_id,
+        usuario_id=usuario_id,
+    )
+    comentarioNuevo.save()
+    return HttpResponse("exito")
+
+def eliminar_comentario(request):
+    comentario_id=request.GET.get("comentario_id","")
+    sub_com=usuarios.Comentario.objects.filter(comentario_id=comentario_id).delete()
+    com_eliminada=usuarios.Comentario.objects.get(id=comentario_id).delete()
+    return HttpResponse("Se elimino")
+
+
+def editar_comentario(request):
+    comentario_id=request.GET.get("id","")
+    contenido=request.GET.get("nuevoContenido","")
+    respuesta=usuarios.Comentario.objects.filter(id=int(comentario_id)).update(contenido=contenido)
+    
+    return HttpResponse("Exito")
