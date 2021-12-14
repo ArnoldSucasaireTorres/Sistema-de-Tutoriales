@@ -234,7 +234,13 @@ def search_e(request):
         if objetos[i] != "":
             filtro[indices[i]]=objetos[i]      
     preguntas=list(usuarios.Pregunta.objects.filter(**filtro))
-    return render(request,"busqueda.html",{"preguntas":preguntas}) 
+
+    pregunta_usuario=[]
+    for pregunta in preguntas:
+        usuario=usuarios.Usuario.objects.get(id=pregunta.usuario_id)
+        pregunta_usuario.append([pregunta,usuario])
+
+    return render(request,"busqueda.html",{"preguntas":pregunta_usuario}) 
 
 def aniadir_respuesta(request):
     usuario=request.GET.get("usuario","")
