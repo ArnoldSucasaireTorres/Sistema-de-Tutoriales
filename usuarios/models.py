@@ -80,6 +80,7 @@ class Respuesta(models.Model):
     usuario = models.ForeignKey (Usuario, on_delete = models.CASCADE, null = True)
     pregunta = models.ForeignKey (Pregunta, on_delete = models.CASCADE, null = True)
     confiabilidad = models.ForeignKey (Confiabilidad, on_delete = models.CASCADE, null = True)
+    aprobacion=models.IntegerField (null = True)
     num_buena_calificacion = models.IntegerField (null = True)
     num_mala_calificacion = models.IntegerField (null = True)
     fecha_de_creacion = models.DateTimeField(blank = True, null = True)

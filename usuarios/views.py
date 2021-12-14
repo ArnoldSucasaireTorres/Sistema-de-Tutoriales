@@ -42,7 +42,7 @@ def pregunta(request):
         return HttpResponse("pregunta no encontrada")
     #verificamos que las respuestas a la pregunta sea confiable o no
     if request.GET.get("comun",""):
-        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 1))       
+        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 1).order_by("-aprobacion"))       
         num_com_por_resp = []
         for r in respuestas:
             '''
@@ -52,26 +52,29 @@ def pregunta(request):
             com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
             usuario = usuarios.Usuario.objects.get(id=r.usuario_id)
             num_com_por_resp.append([r,len(com),usuario])     
-                    
-        return render(request,'respuestas.html',{"respuestas":num_com_por_resp,"id_pregunta":request.GET.get("id","")})
+        pregunta=usuarios.Pregunta.objects.get(id=request.GET.get("id",""))
+        
+        return render(request,'respuestas.html',{"respuestas":num_com_por_resp,"id_pregunta":pregunta})
     
     elif request.GET.get("confi",""):
-        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 2))       
+        respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id, confiabilidad_id = 2).order_by("-aprobacion"))       
         num_com_por_resp = []
         for r in respuestas:
             com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
             usuario = usuarios.Usuario.objects.get(id=r.usuario_id)
-            num_com_por_resp.append([r,len(com),usuario])              
-        return render(request,'respuestas.html',{"respuestas":num_com_por_resp})
+            num_com_por_resp.append([r,len(com),usuario]) 
+
+        pregunta=usuarios.Pregunta.objects.get(id=request.GET.get("id",""))             
+        return render(request,'respuestas.html',{"respuestas":num_com_por_resp,"id_pregunta":pregunta})
     
-    respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id,confiabilidad_id = 2))
+    respuestas = list(usuarios.Respuesta.objects.filter(pregunta_id=pregunta.id,confiabilidad_id = 2).order_by("-aprobacion"))
     num_com_por_resp = []
     for r in respuestas:
         com= list(usuarios.Comentario.objects.filter(respuesta_id=r.id))
         usuario = usuarios.Usuario.objects.get(id=r.usuario_id)
         num_com_por_resp.append([r,len(com),usuario])
-
-    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas,"id_pregunta":request.GET.get("id","")})
+    pregunta=usuarios.Pregunta.objects.get(id=request.GET.get("id",""))
+    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas,"id_pregunta":pregunta})
 
 
 def comentario(request):
@@ -169,8 +172,10 @@ def calificacion(request):
 
 def sistemaDeNivel(request,respuesta):
     diferencia=respuesta.num_buena_calificacion - respuesta.num_mala_calificacion
-    if (diferencia >= 2):
-        if(respuesta.confiabilidad_id != 2):
+    respuesta.aprobacion=diferencia
+    respuesta.save()
+    if (diferencia >= 20):
+        if(respuesta.confiabilidad_id != 20):
             respuesta.confiabilidad_id=2
             #usuario de la respuesta
             u_d_l_r=usuarios.Usuario.objects.get(id=respuesta.usuario_id)
@@ -180,7 +185,7 @@ def sistemaDeNivel(request,respuesta):
             u_d_l_r.save()
             #verifica la cantidad de resp_confiables que tiene el usuario para subir de nivel
             if( 0<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=4 ):
-                u_d_l_r.nivel_id=2
+                u_d_l_r.nivel_id=1
                 u_d_l_r.save()
             elif ( 5<=u_d_l_r.num_resp_confiables and u_d_l_r.num_resp_confiables <=9 ):
                 u_d_l_r.nivel_id=2
@@ -196,7 +201,7 @@ def sistemaDeNivel(request,respuesta):
                 u_d_l_r.save()
 
     else:
-        if(respuesta.confiabilidad_id != 1):
+        if(respuesta.confiabilidad_id != 19):
             respuesta.confiabilidad_id=1
             #usuario de la respuesta
             u_d_l_r=usuarios.Usuario.objects.get(id=respuesta.usuario_id)
@@ -271,7 +276,9 @@ def eliminar_respuesta(request):
 def editar_respuesta(request):
     respuesta_id=request.GET.get("id","")
     contenido=request.GET.get("nuevoContenido","")
-    respuesta=usuarios.Respuesta.objects.filter(id=int(respuesta_id)).update(contenido=contenido)
+    ahora = dt.now()
+    fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+    respuesta=usuarios.Respuesta.objects.filter(id=int(respuesta_id)).update(contenido=contenido,fecha_de_modificacion=fecha)
     return HttpResponse("se cambio contenido")
 
 #Aqui empiezan mis vistas (Jimy)
@@ -488,7 +495,9 @@ def eliminar_comentario(request):
 def editar_comentario(request):
     comentario_id=request.GET.get("id","")
     contenido=request.GET.get("nuevoContenido","")
-    respuesta=usuarios.Comentario.objects.filter(id=int(comentario_id)).update(contenido=contenido)
+    ahora = dt.now()
+    fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
+    respuesta=usuarios.Comentario.objects.filter(id=int(comentario_id)).update(contenido=contenido,fecha_de_modificacion=fecha)
     return HttpResponse("Exito")
 
 def eliminar_pregunta(request):

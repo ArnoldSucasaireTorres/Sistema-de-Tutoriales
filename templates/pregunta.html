@@ -3,8 +3,11 @@
 <div id="busqueda_ajax">
 <br><input type="checkbox" id="resp_normal">
 <label for="resp_normal">Ver respuestas comunes</label>
-<h3>{{pregunta}} </h3>
-{{pregunta.descripcion}}
+<h3>{{id_pregunta.enunciado}} </h3>
+<span>Se creo el {{id_pregunta.fecha_de_creacion}}</span><br>
+<span>Última vez modificada el {{id_pregunta.fecha_de_modificacion}}</span><br>
+<span>Encontradas </span>
+
 <div id="ajax">
     {%include "respuestas.html" %}
 </div>
@@ -260,7 +263,7 @@
                         r_comunes();
                     }
                 }
-                url="contenido="+respuesta.value+"&usuario="+"{{user.username}}&"+"pregunta_id="+"{{id_pregunta}}";
+                url="contenido="+respuesta.value+"&usuario="+"{{user.username}}&"+"pregunta_id="+"{{id_pregunta.id}}";
                 ajax.open('GET',"/aRespuesta/?"+url,true)
                 ajax.send();
                 respuesta.value="";  

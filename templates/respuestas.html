@@ -1,13 +1,15 @@
 
+
 <div id="n_respuestas" cantidad="{{respuestas|length}}">{{respuestas|length}} respuestas</div>
+
 {% for respuesta in respuestas %}
-    <span>{{forloop.counter}}</span><p respuesta_id="{{respuesta.0.id}}"
+    <br><span>{{forloop.counter}}.-</span><span respuesta_id="{{respuesta.0.id}}"
     {%if user.username == respuesta.2.usuario%}
-    class="respuesta">{{respuesta.0}}</p>
+    class="respuesta">{{respuesta.0}}</span><br>
     <span respuesta_id="{{respuesta.0.id}}" class="eliminar" style="cursor: pointer">Eliminar</span><br>
     <span respuesta_id="{{respuesta.0.id}}" class="editar" style="cursor: pointer">editar</span>
     {%else%}
-    >{{respuesta.0}} </p>
+    >{{respuesta.0}} </span><br>
     {%endif%}
     {%load static %}
     <table>
@@ -35,10 +37,11 @@
     <button class="botonComentario" id="ver_com{{respuesta.0.id}}" id_respuesta="{{respuesta.0.id}}" style="cursor:pointer;">ver comentarios</button><br>
     <p>{{respuesta.1}} comentarios</p>
     <div id="comentario{{respuesta.0.id}}"> </div>
-    
     {%endif%}
-    
+    <span>
+    <a href="/usuario/?usuario={{respuesta.2.id}}">{{respuesta.2.usuario}}</a><br>
+    <span>Fecha de modificación {{respuesta.0.fecha_de_modificacion}}</span>
 {%endfor%}
 <div id="nuevoComAjax">nueva Respuesta</div>
-<textarea pregunta="{{id_pregunta}}" id="nueva_respuesta" type="text" name="nueva_respuesta" placeholder="Ingresa tu respuesta"></textarea>
+<textarea pregunta="{{id_pregunta.id}}" id="nueva_respuesta" type="text" name="nueva_respuesta" placeholder="Ingresa tu respuesta"></textarea>
 <button value="nueva_resp" id="nueva_respuestaB">Enviar Respuesta</button>
