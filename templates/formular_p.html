@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+<!-- F -->
     <form action="/Enviar_Pregunta/" class="form" method="get">
+        <input type="hidden" name="usuario" value="{{user.username}}">
         <label for="fname"> Titulo:</label><br>
         <textarea id="enun" name="enun" rows="1" cols="45" autofocus="" required="" placeholder="Escribir la pregunta"></textarea><br>
         <label for="fname"> Area:</label>

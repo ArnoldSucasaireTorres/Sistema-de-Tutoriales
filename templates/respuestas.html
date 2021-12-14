@@ -27,12 +27,17 @@
     <tr><td id="clike{{respuesta.0.id}}">{{respuesta.0.num_buena_calificacion}}</td>
     <td id="cdislike{{respuesta.0.id}}">{{respuesta.0.num_mala_calificacion}}</td></tr>
     </table>
+    {%if user.username %}
+        <span class="comentarRespuesta" 
+        style="color:blue; cursor:pointer" id_respuesta="{{respuesta.0.id}}">Comentar</span><br />
+    {%endif%}
     {%if respuesta.1%}
     <button class="botonComentario" id="ver_com{{respuesta.0.id}}" id_respuesta="{{respuesta.0.id}}" style="cursor:pointer;">ver comentarios</button><br>
     <p>{{respuesta.1}} comentarios</p>
-    <div id="comentario{{respuesta.0.id}}">
-    </div>
+    <div id="comentario{{respuesta.0.id}}"> </div>
+    
     {%endif%}
+    
 {%endfor%}
 <div id="nuevoComAjax">nuevo Respuesta</div>
 <textarea pregunta="{{id_pregunta}}" id="nueva_respuesta" type="text" name="nueva_respuesta" placeholder="Ingresa tu respuesta"></textarea>

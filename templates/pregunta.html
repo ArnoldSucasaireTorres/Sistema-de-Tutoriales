@@ -12,6 +12,7 @@
 <script>
     calificacion();
     aniadir_evento_boton_respuesta();
+    aniadir_evento_comentar_respuesta();
     let resp_normal = document.getElementById("resp_normal");
     resp_normal.addEventListener('click', r_comunes);
     function r_comunes() {
@@ -23,6 +24,7 @@
                 aniadir_evento_boton_comentario();
                 //una vez que se carga las respuestas para cada pregunta se
                 //asigna a comentario un evento
+                aniadir_evento_comentar_respuesta();
                 aniadir_evento_boton_respuesta();
                 aniadir_evento_eliminar_editar();
             }
@@ -35,6 +37,32 @@
             ajax.open("GET", "/pregunta/?id={{pregunta.id}}&confi=2", true);
         }
         ajax.send();
+    }
+    function aniadir_evento_comentar_respuesta(){
+        let comentarRespuesta=document.querySelectorAll(".comentarRespuesta");
+        for(let i=0; i<comentarRespuesta.length; i++){
+            comentarRespuesta[i].addEventListener("click",add_comentar_respuesta);
+        }
+    }
+    function add_comentar_respuesta(){
+        console.log(this);
+        let ajax=new XMLHttpRequest();
+        ajax.onreadystatechange=function(){
+            if(this.readyState==4 && this.status==200){
+                console.log(this.responseText);
+            }
+        }
+        let url;
+        if(this.getAttribute("id_respuesta")){
+            console.log("este es un comentario a respuesta");
+            url="aComentario/?usuario={{user.username}}&id_respuesta="+this.getAttribute("id_respuesta");
+            console.log(url);
+        }
+        else{
+            console.log("este es un comentario a subcomentario");
+            url=this.getAttribute("id_comentario");
+            console.log(url);
+        }
     }
     function aniadir_evento_eliminar_editar(){
         let eliminar =document.querySelectorAll(".eliminar");
@@ -192,6 +220,7 @@
             arreglo[i].addEventListener("click",mostrar_comentarios);
         }
     }
+    
     function mostrar_comentarios(){
         var boton="comentario"+this.getAttribute("id_respuesta");
         let ajax = new XMLHttpRequest();
@@ -199,6 +228,7 @@
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById(boton).innerHTML = this.responseText;
                 aniadir_evento_boton_subcomentario();
+                aniadir_evento_comentar_respuesta();
             }
         }
         let url="/comentario/?id_respuesta="+this.getAttribute("id_respuesta");
@@ -219,6 +249,7 @@
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById(boton).innerHTML = this.responseText;
                 aniadir_evento_boton_subcomentario();
+                aniadir_evento_comentar_respuesta();
             }
         }
         let url="/comentario/?id_comentario="+this.getAttribute("id_comentario");

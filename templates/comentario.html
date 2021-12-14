@@ -1,16 +1,20 @@
 <p>Comentarios:</p>
 {%for comentario in comentarios%}
 <p>{{comentario.0.contenido}}</p>
+{%if user.username %}
+    <span class="comentarRespuesta" 
+        style="color:blue; cursor:pointer" id_comentario="{{comentario.0.id}}">Comentar</span><br />
+{%endif%}
 {%if comentario.1%}
     <p>{{comentario.1}} comentarios</p>
     <button class="subbotonComentario" id="scom{{comentario.0.id}}" id_comentario="{{comentario.0.id}}" style="cursor:pointer;">ver comentarios</button><br>
     {%endif%}
     <div id="subcomentario{{comentario.0.id}}"></div>
 {%endfor%}
+
 {%if request.session.is_empty%}
 <p>no se inicio session</p>
 {%else%}
-<br><input type="text">
-<button>Guardar</button>
+
 {%endif%}
 

@@ -13,13 +13,13 @@
     <h2>Nombre</h2>
     <h4>{{ currUser.nombre }}</h4>
     <h2>Correo</h2>
-    <h4>{{ currUser.correo }}</h4>
+    <h4>{{ request.user.email }}</h4>
 
     <h2>Contactalo(a)</h2>
     <h4>{{ currUser.celular }}</h4>
 
     <h3>-Actualmente es un usuario {{ currUser.nivel }}</h3>
-    <h3>-Se unió el {{ currUser.fecha_de_creacion }}, desde {{ currUser.pais }}</h3>
+    <h3>-Se unió el {{ currUser.fecha_de_creacion }}</h3>
 
     <h2>Preguntas recientes</h2>
     {% for question in questions %}
@@ -30,11 +30,11 @@
     {% for answer in answers %}<!-- respuestas de usuario-->
     <h3>Respondio a la pregunta de </h3>
       {% for question in allQuestions %}<!-- todas las preguntas -->
-        {% if answer.pregunta_id == question.id %} <!-- si la pregunta vinculada a la respuesta es igual al id de la pregunta -->
-          {% for userThatQuestion in users %}<!-- recorremos los ususarios -->
-            {% if userThatQuestion.id == question.usuario_id%}<!-- el id del usuario debe ser el mismo del que hizo la pregunta que el usuario de este perfil contesto -->
+        {% if .preguntaanswer_id == question.id %} <!-- si la pregunta vinculada a la respuesta es igual al id de la pregunta -->
+          {% for userThatQuestion in users %}<!-- recorremos los usuarios -->
+            <!--{% if userThatQuestion.id == question.usuario_id%}--><!-- el id del usuario debe ser el mismo del que hizo la pregunta que el usuario de este perfil contesto -->
               <a style="color:red" href="../pregunta/?id={{question.id}}">{{ userThatQuestion.nombre }}, el dia {{ answer.fecha_de_creacion }}</a>
-            {% endif %}
+            <!--{% endif %}-->
           {% endfor %}
         {% endif%}
       {% endfor %}
