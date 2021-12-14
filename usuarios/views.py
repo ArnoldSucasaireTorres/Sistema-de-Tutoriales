@@ -74,7 +74,8 @@ def pregunta(request):
         usuario = usuarios.Usuario.objects.get(id=r.usuario_id)
         num_com_por_resp.append([r,len(com),usuario])
     pregunta=usuarios.Pregunta.objects.get(id=request.GET.get("id",""))
-    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas,"id_pregunta":pregunta})
+    usuario_pregu=usuarios.Usuario.objects.get(id=pregunta.usuario_id)
+    return render(request,'pregunta.html',{"pregunta":pregunta,"respuestas":num_com_por_resp,"temas":temas,"areas":areas,"id_pregunta":pregunta,"usuario_pregu":usuario_pregu})
 
 
 def comentario(request):

@@ -4,8 +4,12 @@
 <br><input type="checkbox" id="resp_normal">
 <label for="resp_normal">Ver respuestas comunes</label>
 <h3>{{id_pregunta.enunciado}} </h3>
-<span>Se creo el {{id_pregunta.fecha_de_creacion}}</span><br>
-<span>Última vez modificada el {{id_pregunta.fecha_de_modificacion}}</span><br>
+<span>Usuario:</span><span><a href="/usuario/?usuario={{usuario_pregu.id}}">{{usuario_pregu.usuario}}</a></span><br>
+<span>Descripción: </span><span>{{id_pregunta.descripcion}}</span><br />
+<span>Tema: </span><span>{{id_pregunta.tema}}</span><br />
+<span>Area: </span><span>{{id_pregunta.area}}</span><br />
+<span>Creado el:</span><span>{{id_pregunta.fecha_de_creacion}}</span><br>
+<span>Última fecha de modificacion:</span><span>{{id_pregunta.fecha_de_modificacion}}</span><br>
 <span>Encontradas </span>
 
 <div id="ajax">
