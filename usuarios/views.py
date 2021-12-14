@@ -495,3 +495,21 @@ def eliminar_pregunta(request):
     pregunta_id=request.GET.get("pregunta_id","")
     pregunta_eliminada=usuarios.Pregunta.objects.get(id=pregunta_id).delete()
     return HttpResponse(pregunta_id)
+
+def informacion_Usuario(request):
+    if not (request.GET.get("usuario","")):
+        return HttpResponse("Usuario no encontrado")
+    elif not (usuarios.Usuario.objects.filter(id=request.GET.get("usuario","")).exists()):
+        return HttpResponse("Usuario no encontrado")
+
+    usuario=usuarios.Usuario.objects.get(id=request.GET.get("usuario",""))
+    respuestas=list(usuarios.Respuesta.objects.filter(usuario_id=request.GET.get("usuario",""),confiabilidad_id=2))
+    preguntas=[]
+    for respuesta in respuestas:
+        preguntas.append(usuarios.Pregunta.objects.get(id=respuesta.pregunta_id))
+    
+    if usuarios.Nivel.objects.filter(id=usuario.nivel_id).exists():
+        nivel=usuarios.Nivel.objects.get(id=usuario.nivel_id)
+    else:
+        nivel = "Basico"
+    return render(request,"usuario.html",{"usuario":usuario,"respuestas":respuestas,"preguntas":preguntas,"nivel":nivel})

@@ -7,7 +7,10 @@
 "cursor:pointer; color:blue">Eliminar</span>
 {%endif%}
 <br />
+<span>Usuario:</span><span><a href="/usuario/?usuario={{pregunta.1.id}}">{{pregunta.1.usuario}}</a></span><br>
 <span>Descripción: </span><span>{{pregunta.0.descripcion}}</span><br />
 <span>Tema: </span><span>{{pregunta.0.tema}}</span><br />
 <span>Area: </span><span>{{pregunta.0.area}}</span><br />
+<span>Creado el:</span><span>{{pregunta.1.fecha_de_creacion}}</span><br>
+<span>Última fecha de modificacion:</span><span>{{pregunta.1.fecha_de_modificacion}}</span><br>
 {%endfor%}
