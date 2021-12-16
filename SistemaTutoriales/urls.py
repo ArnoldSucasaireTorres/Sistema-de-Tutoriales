@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf.urls import include,url
 #clases propias
 
-from SistemaTutoriales.views import index
+from SistemaTutoriales.views import  index,about_us,contact_us,pregunta_frecuente,index2
 from usuarios import views as vu
 
 #Clases para el login
@@ -59,4 +59,9 @@ urlpatterns = [
     #fin de mis url's
     path('formular_p/', vu.formular_p),
     path('Enviar_Pregunta/', vu.Enviar_Pregunta),
+    #rutas de Frontend
+    path('about/', about_us,name="Nosotros"),
+    path('contact/', contact_us,name="Contactenos"),
+    path('preguntas_frecuentes/', pregunta_frecuente, name="Frecuentes"),
+    path('inicio/', index2,name="inicio")
 ]

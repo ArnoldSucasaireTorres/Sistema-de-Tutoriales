@@ -18,7 +18,16 @@ def hola(request):
 # Funciones de Internacionalizacion
 def index(request):
     return render(request, "index.html",{})
+def index2(request):
+    return render(request, "index.html")
+def about_us(request):
+    return render(request, "about.html",)
+    
+def contact_us(request):
+    return render(request, "contact.html",)
 
+def pregunta_frecuente(request):
+    return render(request, "frecuente.html",)
 #Nuevo Registro 
 @auth_user_should_not_access
 def register(request):

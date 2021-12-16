@@ -1,41 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base/base.html' %}
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stack Question Registro</title>
+    <title>{% block title %}Registro{% endblock %}</title>
 </head>
+
 <body>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    <form action="" class="form" method="post" action={% url 'register' %}>
-        {% csrf_token %}
-        <p>
-            <label for="">Nombre de Usuario: </label>
-            <input type="text" value="{{data.username}}" name="username">
-        </p>
-        <p>
-            <label for="">Correo Electrónico: </label>
-            <input type="text" value="{{data.email}}" name="email">
-        </p>
-        <p>
-            <label for="">Confirmar Contraseña: </label>
-            <input type="password" name="password">
-        </p>
-        <p>
-            <label for="">Confirmar Contraseña: </label>
-            <input type="password" name="password2">
-        </p>
-        <button type="submit" id="submit">Registrarse</button>
-    </form>
-    <p>
-        <div>¿Tienes una cuenta? <a href={% url 'login' %}> Iniciar Sesión</a></div>
-    </p>
+    {% block content %}
+    <div class="conten-reg">
+        <div class="padre-reg">
+            <div class="hijo-reg">
+                <form action="" class="form" method="post" action={% url 'register' %}>
+                    <h1 class="form-title">Registro</h1>
+                    {% csrf_token %}
+
+                    {% if messages %}
+                    <div class="messages">
+                        <ul >
+                            {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    {% endif %}
+                    <p>
+                        <label for="">Nombre de Usuario: </label>
+                        <input type="text" value="{{data.username}}" name="username">
+                    </p>
+                    <p>
+                        <label for="">Correo Electrónico: </label>
+                        <input type="text" value="{{data.email}}" name="email">
+                    </p>
+                    <p>
+                        <label for="">Confirmar Contraseña: </label>
+                        <input type="password" name="password">
+                    </p>
+                    <p>
+                        <label for="">Confirmar Contraseña: </label>
+                        <input type="password" name="password2">
+                    </p>
+                    <button type="submit" id="submit">Registrarse</button>
+                    <p>
+                    <div>¿Tienes una cuenta? <a href={% url 'login' %}> Iniciar Sesión</a></div>
+                    </p>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    {% endblock %}
 </body>
+
 </html>
