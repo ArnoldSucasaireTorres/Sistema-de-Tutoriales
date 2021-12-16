@@ -13,10 +13,10 @@
                                 <div class="alinedo-usuario-p">
                                     <div class="alin-usu-es">Hecho por:</div>
                                     <div>
-                                        <a href="/usuario/?usuario={{pregunta.1.id}}">{{pregunta.1.usuario}}</a>
+                                        <a href="/usuario/?usuario={{pregunta.1.id}}">@{{pregunta.1.usuario}}</a>
                                     </div>
                                     <div class="alin-usu-es">
-                                        Última fecha de modificacion:{{pregunta.1.fecha_de_modificacion}}
+                                        ►{{pregunta.1.fecha_de_modificacion}}◄
                                     </div>
                                 </div>
             
@@ -31,9 +31,7 @@
 
             </div>
             
-            
-
-            <div class="content-desc">
+            <div class="content-pre-foro">
                 <div>{{pregunta.0.descripcion}}</div>
 
                 {%if user.username == pregunta.1.usuario%}

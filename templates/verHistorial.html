@@ -21,20 +21,19 @@
             </p>
             {% endif %}
             <center>
-              <h4 style="color: #47525e;">Nombre</h4>
-              <p  style="color: #47525e;">{{ currUser.nombre }}</p>
-              <h4  style="color: #47525e;">Correo</h4>
-              <p style="color: #47525e;">{{ request.user.email }}</p>
-
-              <h4 style="color: #47525e;">Contactalo(a)</h4>
-              <p style="color: #47525e;">{{ currUser.celular }}</p>
+              <h4  style="color: #47525e;">{{ currUser.nombre }}</h4>
+              <p  style="color: #47525e;">Correo</p>
+              <h4 style="color: #47525e;">{{ request.user.email }}</h4>
+              <p style="color: #47525e;">Contactalo(a)</p>
+              <h4 style="color: #47525e;">{{ currUser.celular }}</h4>
             </center>
           </div>
           <div style="height: 5%;">
           </div>
           <div style="height: 20%;">
             <center>
-              <p style="color: #47525e;">Actualmente es un usuario {{ currUser.nivel }}</p>
+              <p style="color: #47525e;">Actualmente es un usuario</p>
+              <h4 style="color: #47525e;">{{ currUser.nivel }}</h4>
               <p  style="color: #47525e;">Se unió el {{ currUser.fecha_de_creacion }}</p>
               <a class="botones-index" href="../editarPerfil/{{currUser.id}}">Editar perfil</a>
             </center>

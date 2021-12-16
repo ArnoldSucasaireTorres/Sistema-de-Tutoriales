@@ -5,7 +5,7 @@
         {%for comentario in comentarios%}
         
         <div class="num-resp">
-            <span>{{forloop.counter}}</span><span comentario_id="{{comentario.0.id}}"
+            <span>{{forloop.counter}}.- </span><span comentario_id="{{comentario.0.id}}"
             {%if user.username == comentario.2.usuario %}
             class="comentario">{{comentario.0.contenido}}</span>
              <!--Cuerpo del comentario-->
@@ -35,7 +35,7 @@
                     <a  href="/usuario/?usuario={{comentario.2.id}}">{{comentario.2.usuario}}</a>
                 </div>
                 <div class="alin-usu-es" >
-                    <span>Fecha de modificación {{comentario.0.fecha_de_modificacion}}</span>
+                    <span>{{comentario.0.fecha_de_modificacion}}</span>
                 </div>
             </div>
             
@@ -46,14 +46,14 @@
         <br><br>
         {%if comentario.1%}
             <p>{{comentario.1}} comentarios</p>
-            <button class="subbotonComentario botones-index" id="scom{{comentario.0.id}}" id_comentario="{{comentario.0.id}}" style="cursor:pointer;">ver comentarios</button>
+            <button class="subbotonComentario botones-index" id="scom{{comentario.0.id}}" id_comentario="{{comentario.0.id}}" style="cursor:pointer;">Ver comentarios</button>
             {%endif%}
             
             <div id="subcomentario{{comentario.0.id}}"></div>
         {%endfor%}
     </div>
     {%if request.session.is_empty%}
-    <h4>no se inicio session</h4>
+    <h4>No se inicio session</h4>
     {%else%}
     
     {%endif%}

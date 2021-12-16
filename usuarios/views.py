@@ -257,6 +257,7 @@ def aniadir_respuesta(request):
     usuario=usuarios.Usuario.objects.get(usuario=usuario)
     respuesta_nueva=usuarios.Respuesta(
         contenido=contenido,
+        aprobacion=0,
         num_buena_calificacion=0,
         num_mala_calificacion=0,
         fecha_de_creacion=fecha,

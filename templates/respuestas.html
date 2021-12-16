@@ -1,6 +1,5 @@
 
-
-<div id="n_respuestas" cantidad="{{respuestas|length}}">{{respuestas|length}} respuestas</div>
+<div id="n_respuestas" cantidad="{{respuestas|length}}">{{respuestas|length}} respuestas Encontradas</div>
 <div class="resp-con">
 {% for respuesta in respuestas %}
     <br>
@@ -36,17 +35,16 @@
                        <td style="  text-align: center;">
                         <div class="alinedo-usuario">
                             <div class="alin-usu-es">Usuario:</div>
-                            <a  href="/usuario/?usuario={{respuesta.2.id}}">{{respuesta.2.usuario}}</a>
+                            <a  href="/usuario/?usuario={{respuesta.2.id}}">@{{respuesta.2.usuario}}</a>
                         </div>
                         </td>
             </tr>
             <tr>
                     <td style="  text-align: center; padding: 0;margin: 0;" id="clike{{respuesta.0.id}}">{{respuesta.0.num_buena_calificacion}}</td>
                     <td style="  text-align: center; padding: 0;margin: 0;" id="cdislike{{respuesta.0.id}}">{{respuesta.0.num_mala_calificacion}}</td>
-                    <td style="  text-align: center; "><span>Fecha de modificación {{respuesta.0.fecha_de_modificacion}}</span>
+                    <td style="  text-align: center; "><span>   ►{{respuesta.0.fecha_de_modificacion}}◄</span>
                     </td>
             </tr>
-            
         </table>
     </div>
     <br>
@@ -60,10 +58,10 @@
         
     {%endif%}
     {%if respuesta.1%}
-    <button class="botonComentario botones-index" id="ver_com{{respuesta.0.id}}" id_respuesta="{{respuesta.0.id}}" style="cursor:pointer;">ver comentarios</button>
-    <!--<div class="conten-button-coment">
+    <button class="botonComentario botones-index" id="ver_com{{respuesta.0.id}}" id_respuesta="{{respuesta.0.id}}" style="cursor:pointer;">Ver comentarios</button>
+    <div class="conten-button-coment">
         <p>{{respuesta.1}} comentarios</p>
-    </div>-->
+    </div>
     <div id="comentario{{respuesta.0.id}}"> </div>
     {%endif%}
     <!--<br>
@@ -79,10 +77,10 @@
 </div>
 
 
-<div class="content-form-agregar">
-    <div id="nuevoComAjax">nueva Respuesta</div>
+<div class="content-form-agregar"  style="margin-top:20px;">
+    <div id="nuevoComAjax"></div>
     <div>
-        <textarea class="textbox" pregunta="{{id_pregunta.id}}" id="nueva_respuesta" type="text" name="nueva_respuesta" placeholder="Ingresa tu respuesta"></textarea>
+        <textarea  style="width: 200px;" class="textbox" pregunta="{{id_pregunta.id}}" id="nueva_respuesta" type="text" name="nueva_respuesta" placeholder="Ingresa tu respuesta"></textarea>
     </div>
     <div>
         <button  class="botones-index"value="nueva_resp" id="nueva_respuestaB">Enviar Respuesta</button>

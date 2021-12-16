@@ -7,7 +7,7 @@
             <br><input type="checkbox" id="resp_normal">
             <label for="resp_normal">Ver respuestas comunes</label>
             <div class="pregunta-foro">
-                <div class="container-title-temas">
+                <div class="container-title-temas" style="padding:0px 5px 0px 5px;">
                     <h3>{{id_pregunta.enunciado}} </h3>
                     <div class="column-pre " style="margin-top: 10px;">
                         <span>Tema: {{id_pregunta.tema}}</span>
@@ -19,10 +19,10 @@
                         <div class="alinedo-usuario-p">
                             <div class="alin-usu-es">Hecho por:</div>
                             <div>
-                                <a href="/usuario/?usuario={{usuario_pregu.id}}">{{usuario_pregu.usuario}}</a>
+                                <a href="/usuario/?usuario={{usuario_pregu.id}}">@{{usuario_pregu.usuario}}</a>
                             </div>
                             <div class="alin-usu-es">
-                                Última fecha de modificacion:{{id_pregunta.fecha_de_modificacion}}
+                                ► {{id_pregunta.fecha_de_modificacion}}◄
                             </div>
                         </div>
                     </div>
@@ -30,14 +30,11 @@
                
             </div>
 
-            <div class="content-pre-foro">
+            <div class="content-pre-foro" style="padding:5px;">
                 {{id_pregunta.descripcion}}
-
             </div>
 
-
-            <br><br>
-            <span>Encontradas </span>
+            <br>
 
             <div id="ajax">
                 {%include "respuestas.html" %}

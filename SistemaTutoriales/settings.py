@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import django_heroku
+
 from pathlib import Path
 import os
 import sys
@@ -125,7 +127,6 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    '/var/www/static/',
 ]
 
 # Default primary key field type
@@ -135,5 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/auth/login/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-
+#Activate Django-Heroku
+django_heroku.settings(locals())

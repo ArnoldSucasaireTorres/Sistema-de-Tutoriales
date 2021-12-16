@@ -16,7 +16,122 @@
     <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Raleway:500,600&display=swap" rel="stylesheet">
     
     
-    
+    <style>
+     .editarGuardar{
+        color:white !important;
+        width: 180px !important;
+        text-align:center !important;
+        padding: 0 !important;
+        display: inline-block !important;
+        font-size:15px !important;
+        height: 20px !important;
+     }
+     .editarCancelar{
+        color:white !important;
+        width: 80px !important;
+        /*float: left !important;*/
+        text-align:center !important; 
+        padding: 0 !important;
+        display: inline-block !important;
+        
+        font-size: 15px !important;
+        height: 20px !important;
+     }
+     .content-pre{
+         
+         box-shadow: 5px 5px 5px rgb(189, 182, 182);
+         border-radius: 10px;
+         transition: all 0.1s ease-in-out;
+     }
+     .content-pre:hover{
+         box-shadow: 0px 0px 25px rgb(66, 65, 65);
+         border-radius: 10px;
+         transition: all 0.1s ease-in-out;
+     }
+     .pregunta-foro{
+    border-radius: 10px;
+     }
+     .container-title-temas-bus{
+         padding:5px 10px 5px 10px;
+     }
+     .content-pre-foro{
+         padding:5px
+     
+     }
+     span.editar,span.eliminar{
+         font-size: 10px;
+     }
+     span.eliminar:hover{
+         box-shadow: 2px 2px 2px rgb(66, 65, 65);
+         background-color: rgb(230, 68, 68);
+         color: white;
+     }
+     a:hover{
+         background-color: rgb(105, 102, 102) !important;
+         border-radius: 5px;
+         margin: 2px;
+         transition: all 0.2s ease-in-out;
+     }
+     button[value="nueva_resp"]:hover{
+box-shadow: 2px 2px 2px rgb(66, 65, 65);
+         background-color: rgb(66, 202, 53);
+         color: white;
+     }
+     .comentarRespuesta{
+         font-size:10px;
+     }
+     .eliminarPreg:hover{
+          box-shadow: 2px 2px 2px rgb(66, 65, 65);
+         background-color: rgb(230, 68, 68);
+         color: white;
+         text-shadow: 2px 2px 2px black;
+     }
+     span.eliminarC{
+         color:rgb(230, 68, 68);
+         font-size: 12px;
+     }
+     span.eliminarC:hover{
+         color:rgb(204, 44, 44);
+         font-size: 12px;
+         text-shadow: 0px 0px 10px black;
+     }
+     span.editarC{
+         color:rgb(89, 89, 226);
+         font-size: 12px;
+     }
+     span.editarC:hover{
+         color:rgb(89, 89, 226);
+         font-size: 12px;
+         text-shadow: 0px 0px 10px black;
+     }
+     /*
+     div div div.num-resp{
+         height: 10px;
+     }
+     */
+     .contenedor-boton-descripcion{
+         margin-top:20px;
+     }
+     hr{
+         margin-top:30px;
+     }
+     span.editar:hover{
+         box-shadow: 2px 2px 2px rgb(66, 65, 65);
+         background-color: rgb(51, 123, 230);
+         color: white;
+     }
+     div.coment{
+         padding-right:10px;
+     }
+     div.foro-content{
+         margin-bottom:10px;
+         border-top-left-radius: 5px;
+         border-radius:5px;
+     }
+     div.content-resp{
+         border-radius: 10px;
+     }
+     </style>
     
     <title>{% block title %} Document {% endblock %}</title>
 </head>
@@ -34,8 +149,8 @@
 
             <nav class="navigation">
                 <ul>
-                    <li><a href="/foro/">Inicio</a></li>
-                    <li><a href="../preguntas_frecuentes/">Preguntas frecuentes</a></li>
+                    <li><a href="/foro/">Foro de Preguntas</a></li>
+                    <li><a href="../preguntas_frecuentes/">¿Como usar?</a></li>
                     <li><a href="../about/">Sobre Nosotros</a></li>
                     <li><a href="../contact/">Contactos</a></li>
 
