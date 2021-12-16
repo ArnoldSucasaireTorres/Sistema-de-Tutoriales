@@ -24,7 +24,6 @@
                         </div>
                 </div>
                 
-                {%if user.username == pregunta.1.usuario%}
                 <div class="column-pre " style="margin-top: 0px;">
                     <span>Tema:{{pregunta.0.tema}}</span>
                     <span>Area:{{pregunta.0.area}}</span>
@@ -36,7 +35,8 @@
 
             <div class="content-desc">
                 <div>{{pregunta.0.descripcion}}</div>
-                
+
+                {%if user.username == pregunta.1.usuario%}
                 <div>
                     <span class="botones-index eliminarPreg" pregunta_id="{{pregunta.0.id}}"
                     style="float:right; font-size: 15px;cursor:pointer;">Eliminar</span>

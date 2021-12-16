@@ -175,8 +175,8 @@ def sistemaDeNivel(request,respuesta):
     diferencia=respuesta.num_buena_calificacion - respuesta.num_mala_calificacion
     respuesta.aprobacion=diferencia
     respuesta.save()
-    if (diferencia >= 20):
-        if(respuesta.confiabilidad_id != 20):
+    if (diferencia >= 5):
+        if(respuesta.confiabilidad_id != 5):
             respuesta.confiabilidad_id=2
             #usuario de la respuesta
             u_d_l_r=usuarios.Usuario.objects.get(id=respuesta.usuario_id)
@@ -202,7 +202,7 @@ def sistemaDeNivel(request,respuesta):
                 u_d_l_r.save()
 
     else:
-        if(respuesta.confiabilidad_id != 19):
+        if(respuesta.confiabilidad_id != 4):
             respuesta.confiabilidad_id=1
             #usuario de la respuesta
             u_d_l_r=usuarios.Usuario.objects.get(id=respuesta.usuario_id)
@@ -322,7 +322,7 @@ def verHistorial(request, id):
         currUser=usuarios.Usuario.objects.get(id=id)"""
         return render(request, "verHistorial.html", {'resFiltradas': resFiltradas ,'currUser': falseUser, 'questions': userQuestions, 'answers': userAnswers ,'allQuestions' : allQuestions, 'allAnswers':allAnswers, 'users':allUsers })
     else:
-        messages.info(request,'Usted no esta autorizado a ver este perfil o este perfil ya no existe')
+        #messages.info(request,'Usted no esta autorizado a ver este perfil o este perfil ya no existe')
         return redirect(reverse('foro'))
 
 #esta ya esta
@@ -361,7 +361,7 @@ def editarPerfil(request, id):
             #editUser.fecha_de_modificacion=dt.date.today()
             editUser.fecha_de_modificacion=dt.now()
             editUser.save()
-            messages.info(request,'Se guardaron los cambios')
+            #messages.info(request,'Se guardaron los cambios')
             return redirect(reverse('foro'))
         else:
             currUser=usuarios.Usuario.objects.get(usuario=request.user.username)
@@ -373,7 +373,7 @@ def editarPerfil(request, id):
             #print(fechaCumpleanios)
             return render(request,"editarPerfil.html",{'currUser':currUser, 'fechaCumpleanios':fechaCumpleanios})
     else:
-        messages.info(request,'Usted no esta autorizado a editar este perfil o este perfil no existe')
+        #messages.info(request,'Usted no esta autorizado a editar este perfil o este perfil no existe')
         return redirect(reverse('foro'))
 
 @login_required
@@ -386,10 +386,10 @@ def eliminarCuenta(request, id):
             delAuth=request.user
             delAuth.delete()
             logout(request)
-            messages.info(request,'Se elimino la cuenta')
+            #messages.info(request,'Se elimino la cuenta')
             return redirect(reverse('foro'))
         else:
-            messages.info(request,'No se pudo eliminar la cuenta')
+            #messages.info(request,'No se pudo eliminar la cuenta')
             return redirect(reverse('foro'))
     else:
         return redirect(reverse('foro'))
@@ -401,22 +401,24 @@ def eliminarPregunta(request, id):
     if(selQuestion.usuario_id == currUser.id) :
         selQuestion.delete()
         print("Se elimino la pregunta")
-        messages.info(request,'Eliminaste la pregunta')
+        #messages.info(request,'Eliminaste la pregunta')
         return redirect(reverse('foro'))
     else:
-        messages.info(request,'No se elimino la pregunta porque tu no la creaste o la pregunta no existe')
+        #messages.info(request,'No se elimino la pregunta porque tu no la creaste o la pregunta no existe')
         return redirect(reverse('foro'))
 
 @login_required
 def eliminarRespuesta(request, id):
     selAnswer=usuarios.Respuesta.objects.get(id=id)
-    if(selAnswer.usuario_id == request.user.id) :
+    currUser=usuarios.Usuario.objects.get(usuario=request.user.username)
+    if(selAnswer.usuario_id == currUser.id) :
         selAnswer.delete()
         print("Se elimino la respuesta")
-        messages.info(request,'Eliminaste la respuesta')
+        #messages.info(request,'Eliminaste la respuesta')
         return redirect(reverse('foro'))
     else:
-        messages.info(request,'No se elimino la resspuesta porque tu no la creaste o la pregunta no existe')
+        print(" No se puedo eliminar el mensaje")
+        #messages.info(request,'No se elimino la resspuesta porque tu no la creaste o la pregunta no existe')
         return redirect(reverse('foro'))
 #Fin de mis vistas
 

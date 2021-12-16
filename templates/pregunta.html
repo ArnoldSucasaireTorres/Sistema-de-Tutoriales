@@ -106,9 +106,9 @@
             if (editar[i].getAttribute("comentario_id") == this.getAttribute("comentario_id")) {
                 let valor = editar[i].innerHTML;
                 editar[i].innerHTML = `
-                <textarea id="editar${editar[i].getAttribute("comentario_id")}">${valor}</textarea>
-                <span id="guardar_cambios${editar[i].getAttribute("comentario_id")}" comentario_id="${editar[i].getAttribute("comentario_id")}">Guardar Cambios</span>
-                <span id="cancelar${editar[i].getAttribute("comentario_id")}">Cancelar</span>
+                <textarea class="editarTextArea" id="editar${editar[i].getAttribute("comentario_id")}">${valor}</textarea>
+                <span class="editarGuardar" id="guardar_cambios${editar[i].getAttribute("comentario_id")}" comentario_id="${editar[i].getAttribute("comentario_id")}">Guardar Cambios</span>
+                <span class="editarCancelar" id="cancelar${editar[i].getAttribute("comentario_id")}">Cancelar</span>
                 `;
                 document.getElementById("guardar_cambios" + editar[i].getAttribute("comentario_id")).addEventListener("click", function () {
                     let edicion = document.getElementById("editar" + this.getAttribute("comentario_id"))
@@ -151,9 +151,9 @@
             url = "/aComentario/?usuario={{user.username}}&id_respuesta=" + this.getAttribute("id_respuesta");
             let eActual = this;
             this.parentNode.innerHTML = `
-            <textarea respuesta="${this.getAttribute("id_respuesta")}" id="com_resp${this.getAttribute("id_respuesta")}"></textarea>
-            <span id="g_c${this.getAttribute("id_respuesta")}">Guardar Comentario</span>
-            <span id="c${this.getAttribute("id_respuesta")}">Cancelar</span>
+            <textarea class="editarTextArea" respuesta="${this.getAttribute("id_respuesta")}" id="com_resp${this.getAttribute("id_respuesta")}"></textarea>
+            <a class="editarGuardar" id="g_c${this.getAttribute("id_respuesta")}">Guardar Comentario</p>
+            <a class="editarCancelar" id="c${this.getAttribute("id_respuesta")}">Cancelar</p>
             `;
             document.getElementById("g_c" + this.getAttribute("id_respuesta")).addEventListener("click", function () {
                 let edicion = document.getElementById("com_resp" + eActual.getAttribute("id_respuesta"))
@@ -182,9 +182,9 @@
             url = "/aComentario/?usuario={{user.username}}&id_respuesta=" + this.getAttribute("id_comentario");
             let eActual = this;
             this.parentNode.innerHTML = `
-            <textarea respuesta="${this.getAttribute("id_comentario")}" id="com_com${this.getAttribute("id_comentario")}"></textarea>
-            <span id="g_c${this.getAttribute("id_comentario")}">Guardar Comentario</span>
-            <span id="c${this.getAttribute("id_comentario")}">Cancelar</span>
+            <textarea class="editarTextArea"  respuesta="${this.getAttribute("id_comentario")}" id="com_com${this.getAttribute("id_comentario")}"></textarea>
+            <span class="editarGuardar" id="g_c${this.getAttribute("id_comentario")}">Guardar Comentario</span>
+            <span class="editarCancelar" id="c${this.getAttribute("id_comentario")}">Cancelar</span>
             `;
             document.getElementById("g_c" + this.getAttribute("id_comentario")).addEventListener("click", function () {
                 let edicion = document.getElementById("com_com" + eActual.getAttribute("id_comentario"))
@@ -239,9 +239,9 @@
             if (editar[i].getAttribute("respuesta_id") == this.getAttribute("respuesta_id")) {
                 let valor = editar[i].innerHTML;
                 editar[i].innerHTML = `
-                <textarea id="editar${editar[i].getAttribute("respuesta_id")}">${valor}</textarea>
-                <span id="guardar_cambios${editar[i].getAttribute("respuesta_id")}" respuesta_id="${editar[i].getAttribute("respuesta_id")}">Guardar Cambios</span>
-                <span id="cancelar${editar[i].getAttribute("respuesta_id")}">Cancelar</span>
+                <textarea  class="editarTextArea"  id="editar${editar[i].getAttribute("respuesta_id")}">${valor}</textarea>
+                <span class="editarGuardar" id="guardar_cambios${editar[i].getAttribute("respuesta_id")}" respuesta_id="${editar[i].getAttribute("respuesta_id")}">Guardar Cambios</span>
+                <span class="editarCancelar" id="cancelar${editar[i].getAttribute("respuesta_id")}">Cancelar</span>
                 `;
                 document.getElementById("guardar_cambios" + editar[i].getAttribute("respuesta_id")).addEventListener("click", function () {
                     let edicion = document.getElementById("editar" + this.getAttribute("respuesta_id"))

@@ -76,6 +76,7 @@ def register(request):
         fecha = ahora.strftime("%Y-%m-%d %H:%M:%S")
 
         user = usuarios.Usuario(
+                nombre="Anonimo",
                 usuario = username,
                 correo = email,
                 contrasenia = password,
