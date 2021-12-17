@@ -133,25 +133,35 @@ box-shadow: 2px 2px 2px rgb(66, 65, 65);
      }
      div.goog-te-gadget-simple{
         display: block;
-       
+        background-color: white !important;
         font-family: 'Verdana', sans-serif;
-        color: #444;
         line-height: 1;
         padding: 0em 0.8em 0.2em 0.2em;
         max-width: 100%;
         box-sizing: border-box;
         border: 1px solid #aaa;
-        box-shadow: 0 1px 0 1px rgb(0 0 0 / 3%);
         border-radius: 0.3em;
-        -moz-appearance: none;
-        -webkit-appearance: none;
         appearance: none;
-        background-color: #fff;
-        background-repeat: no-repeat, repeat;
-        background-position: right 0.7em top 50%, 0 0;
         background-size: 0.65em auto, 100%;
 
      }
+     div.goog-te-gadget-simple{
+         background-color:  white !important;
+         height:25px;
+         padding-top:5px;
+         margin-top:5px;
+     }
+    
+    .goog-te-menu-value{
+        background-color: white !important;
+    }
+    a.logo:hover{
+        background-color:white !important;
+    }
+    
+    a.goog-te-menu-value span:hover{
+        background-color:white !important;
+    }
      </style>
     
     <title>{% block title %} Document {% endblock %}</title>
@@ -209,6 +219,9 @@ box-shadow: 2px 2px 2px rgb(66, 65, 65);
                 top: 0 !important;
             }
             .goog-te-banner-frame{
+                display:none;
+            }
+            .goog-te-gadget-icon{
                 display:none;
             }
             
